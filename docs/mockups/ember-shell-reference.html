@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Ember Shell — visual reference mockup (VulcanOS)</title>
+<style>
+  /*
+    This is a REFERENCE MOCKUP, not implementation code. It exists so
+    that docs/DESKTOP_ENVIRONMENT.md's color/layout decisions are
+    checkable at a glance instead of only readable as prose and a
+    hex table. Every color/size value here must match that document
+    exactly -- if you change one, change both.
+
+    This file has nothing to do with VulcanOS's actual future
+    compositor (Section 8 of the spec). It's a static HTML/CSS
+    approximation of what Ember Shell should look like, viewed in
+    any ordinary web browser, not a preview of real VulcanOS code.
+  */
+
+  :root {
+    /* Exact tokens from docs/DESKTOP_ENVIRONMENT.md Section 4 */
+    --ember-obsidian: #15100F;
+    --ember-basalt:   #221A18;
+    --ember-ash:      #4A3F3C;
+    --ember-smoke:    #8A7B76;
+    --ember-pumice:   #D8CFC9;
+    --ember-core:     #E8491B;
+    --ember-magma:    #FF7A3D;
+    --ember-flare:    #FFB454;
+    --ember-vent:     #2E8B7A;
+    --ember-fault:    #C0334D;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: -apple-system, "Segoe UI", sans-serif; /* placeholder only -- see spec Section 5, Vulcan Sans is not designed yet */
+    background: #000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    padding: 24px;
+  }
+
+  .caption {
+    position: fixed;
+    top: 12px;
+    left: 12px;
+    color: #666;
+    font-size: 12px;
+    font-family: monospace;
+  }
+
+  /* --- Desktop surface (Section 6.1) --- */
+  .desktop {
+    width: 1024px;
+    height: 640px;
+    position: relative;
+    overflow: hidden;
+    border-radius: 4px;
+    background:
+      radial-gradient(ellipse at 30% 20%, #3a1f1a 0%, transparent 55%),
+      linear-gradient(180deg, var(--ember-obsidian) 0%, #1c1412 100%);
+    box-shadow: 0 0 0 1px #000, 0 40px 80px rgba(0,0,0,0.6);
+  }
+
+  /* --- Icon grid (Section 6.1) --- */
+  .icon-grid {
+    position: absolute;
+    top: 24px;
+    left: 24px;
+    display: grid;
+    grid-template-columns: repeat(1, 88px);
+    gap: 4px;
+  }
+  .icon-tile {
+    width: 88px;
+    height: 88px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    border-radius: 8px;
+    cursor: default;
+  }
+  .icon-tile.hover { background: rgba(34,26,24,0.6); } /* ember-basalt @ 60% per spec */
+  .icon-glyph {
+    width: 64px;
+    height: 64px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .icon-label {
+    font-size: 12px;
+    color: var(--ember-pumice);
+    text-align: center;
+  }
+
+  /* --- Window (Section 6.2) --- */
+  .window {
+    position: absolute;
+    background: #17110F;
+    border-radius: 8px 8px 0 0;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+    overflow: hidden;
+  }
+  .window.active { top: 90px; left: 180px; width: 560px; height: 380px; z-index: 2; }
+  .window.inactive { top: 140px; left: 620px; width: 320px; height: 220px; z-index: 1; }
+
+  .titlebar {
+    height: 32px;
+    display: flex;
+    align-items: center;
+    padding: 0 10px;
+    justify-content: space-between;
+  }
+  .window.active .titlebar {
+    background: linear-gradient(180deg, var(--ember-core) 0%, #d43e17 100%);
+  }
+  .window.inactive .titlebar {
+    background: var(--ember-basalt);
+  }
+  .titlebar-title {
+    font-size: 13px;
+    font-weight: 500;
+    color: #fff;
+    opacity: 0.95;
+  }
+  .window.inactive .titlebar-title { color: var(--ember-smoke); }
+
+  .window-controls { display: flex; gap: 8px; align-items: center; }
+  .ctrl {
+    width: 12px;
+    height: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .ctrl svg { width: 10px; height: 10px; }
+
+  .window-body {
+    height: calc(100% - 32px);
+    background: var(--ember-obsidian);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--ember-ash);
+    font-size: 12px;
+    font-family: monospace;
+  }
+
+  /* --- Panel (Section 6.3) --- */
+  .panel {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 40px;
+    background: var(--ember-basalt);
+    border-top: 1px solid var(--ember-ash);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 12px;
+    z-index: 3;
+  }
+  .panel-left { display: flex; align-items: center; gap: 4px; }
+  .launcher {
+    width: 28px; height: 28px;
+    border-radius: 6px;
+    background: var(--ember-core);
+    display: flex; align-items: center; justify-content: center;
+  }
+  .taskbar-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 10px;
+    border-radius: 4px;
+    font-size: 12px;
+    color: var(--ember-pumice);
+    position: relative;
+  }
+  .taskbar-item.active::after {
+    content: "";
+    position: absolute;
+    bottom: -1px;
+    left: 10px;
+    right: 10px;
+    height: 2px;
+    background: var(--ember-core);
+    border-radius: 1px;
+  }
+  .taskbar-item.active { color: #fff; }
+  .taskbar-dot {
+    width: 6px; height: 6px; border-radius: 50%;
+    background: var(--ember-smoke);
+  }
+  .taskbar-item.active .taskbar-dot { background: var(--ember-magma); }
+
+  .panel-right { display: flex; align-items: center; gap: 14px; }
+  .tray-icon { width: 16px; height: 16px; opacity: 0.85; }
+  .clock { font-size: 20px; color: var(--ember-pumice); font-variant-numeric: tabular-nums; }
+
+  /* --- Legend panel below the mockup --- */
+  .legend {
+    width: 1024px;
+    margin-top: 20px;
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 8px;
+  }
+  .swatch {
+    border-radius: 6px;
+    padding: 10px 12px;
+    font-family: monospace;
+    font-size: 11px;
+  }
+  .swatch-name { color: rgba(255,255,255,0.9); font-weight: bold; }
+  .swatch-hex { color: rgba(255,255,255,0.6); }
+
+  .wrap { display: flex; flex-direction: column; align-items: center; }
+</style>
+</head>
+<body>
+<div class="caption">docs/mockups/ember-shell-reference.html — static reference, not real VulcanOS code</div>
+
+<div class="wrap">
+<div class="desktop">
+
+  <!-- Icon grid: 4 example tiles, top-anchored column per Section 6.1 -->
+  <div class="icon-grid">
+    <div class="icon-tile">
+      <div class="icon-glyph" style="background:#2A211E;">
+        <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="#D8CFC9" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="4" y="4" width="16" height="16" rx="2"/>
+          <path d="M4 9h16"/>
+        </svg>
+      </div>
+      <div class="icon-label">File Manager</div>
+    </div>
+
+    <div class="icon-tile hover">
+      <div class="icon-glyph" style="background:#2A211E;">
+        <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="#FF7A3D" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="3" y="5" width="18" height="14" rx="2"/>
+          <path d="M8 21h8M12 17v4"/>
+        </svg>
+      </div>
+      <div class="icon-label">Settings</div>
+    </div>
+
+    <div class="icon-tile">
+      <div class="icon-glyph" style="background:#2A211E;">
+        <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="#D8CFC9" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M4 17l6-6-6-6M12 19h8"/>
+        </svg>
+      </div>
+      <div class="icon-label">vulsh</div>
+    </div>
+
+    <div class="icon-tile">
+      <div class="icon-glyph" style="background:#2A211E;">
+        <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="#D8CFC9" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="8"/>
+          <path d="M12 8v4l3 3"/>
+        </svg>
+      </div>
+      <div class="icon-label">vulcaninfo</div>
+    </div>
+  </div>
+
+  <!-- Active window: colored titlebar per Section 6.2 -->
+  <div class="window active">
+    <div class="titlebar">
+      <span class="titlebar-title">vulsh — /home/user</span>
+      <div class="window-controls">
+        <div class="ctrl">
+          <svg viewBox="0 0 10 10"><path d="M1 1 L9 9 M9 1 L1 9" stroke="#fff" stroke-width="1.4" stroke-linecap="round"/></svg>
+        </div>
+        <div class="ctrl">
+          <svg viewBox="0 0 10 10"><rect x="1" y="1" width="8" height="8" fill="none" stroke="#fff" stroke-width="1.4"/></svg>
+        </div>
+        <div class="ctrl">
+          <svg viewBox="0 0 10 10"><line x1="1" y1="5" x2="9" y2="5" stroke="#fff" stroke-width="1.4" stroke-linecap="round"/></svg>
+        </div>
+      </div>
+    </div>
+    <div class="window-body">[ window content area — application-drawn ]</div>
+  </div>
+
+  <!-- Inactive window: flat basalt titlebar per Section 6.2 -->
+  <div class="window inactive">
+    <div class="titlebar">
+      <span class="titlebar-title">System Monitor</span>
+      <div class="window-controls">
+        <div class="ctrl">
+          <svg viewBox="0 0 10 10"><path d="M1 1 L9 9 M9 1 L1 9" stroke="#8A7B76" stroke-width="1.4" stroke-linecap="round"/></svg>
+        </div>
+        <div class="ctrl">
+          <svg viewBox="0 0 10 10"><rect x="1" y="1" width="8" height="8" fill="none" stroke="#8A7B76" stroke-width="1.4"/></svg>
+        </div>
+        <div class="ctrl">
+          <svg viewBox="0 0 10 10"><line x1="1" y1="5" x2="9" y2="5" stroke="#8A7B76" stroke-width="1.4" stroke-linecap="round"/></svg>
+        </div>
+      </div>
+    </div>
+    <div class="window-body">[ inactive window ]</div>
+  </div>
+
+  <!-- Panel: Section 6.3 -->
+  <div class="panel">
+    <div class="panel-left">
+      <div class="launcher">
+        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 2 L4 14 L11 14 L10 22 L20 9 L13 9 Z"/>
+        </svg>
+      </div>
+      <div class="taskbar-item active">
+        <span class="taskbar-dot"></span>
+        vulsh
+      </div>
+      <div class="taskbar-item">
+        <span class="taskbar-dot"></span>
+        System Monitor
+      </div>
+    </div>
+    <div class="panel-right">
+      <svg class="tray-icon" viewBox="0 0 24 24" fill="none" stroke="#D8CFC9" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12a7 7 0 0114 0M8.5 15.5a3.5 3.5 0 017 0M12 19h.01"/></svg>
+      <svg class="tray-icon" viewBox="0 0 24 24" fill="none" stroke="#D8CFC9" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="7" y="2" width="10" height="18" rx="2"/><path d="M10 22h4"/></svg>
+      <span class="clock">14:25</span>
+    </div>
+  </div>
+
+</div>
+
+<div class="legend">
+  <div class="swatch" style="background:#15100F;"><div class="swatch-name">ember-obsidian</div><div class="swatch-hex">#15100F</div></div>
+  <div class="swatch" style="background:#221A18;"><div class="swatch-name">ember-basalt</div><div class="swatch-hex">#221A18</div></div>
+  <div class="swatch" style="background:#4A3F3C;"><div class="swatch-name">ember-ash</div><div class="swatch-hex">#4A3F3C</div></div>
+  <div class="swatch" style="background:#8A7B76;"><div class="swatch-name">ember-smoke</div><div class="swatch-hex">#8A7B76</div></div>
+  <div class="swatch" style="background:#D8CFC9; color:#15100F;"><div class="swatch-name" style="color:#15100F;">ember-pumice</div><div class="swatch-hex" style="color:#4A3F3C;">#D8CFC9</div></div>
+  <div class="swatch" style="background:#E8491B;"><div class="swatch-name">ember-core</div><div class="swatch-hex">#E8491B</div></div>
+  <div class="swatch" style="background:#FF7A3D;"><div class="swatch-name">ember-magma</div><div class="swatch-hex">#FF7A3D</div></div>
+  <div class="swatch" style="background:#FFB454; color:#15100F;"><div class="swatch-name" style="color:#15100F;">ember-flare</div><div class="swatch-hex" style="color:#4A3F3C;">#FFB454</div></div>
+  <div class="swatch" style="background:#2E8B7A;"><div class="swatch-name">ember-vent</div><div class="swatch-hex">#2E8B7A</div></div>
+  <div class="swatch" style="background:#C0334D;"><div class="swatch-name">ember-fault</div><div class="swatch-hex">#C0334D</div></div>
+</div>
+</div>
+
+</body>
+</html>
