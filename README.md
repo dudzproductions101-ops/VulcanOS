@@ -22,7 +22,11 @@
   </code></pre>
 </div>
 
+---
+
 VulcanOS is a from-scratch, bare-metal graphical operating system designed for x86_64 systems. VulcanOS is the successor to the original OneOS project, representing a complete rewrite, redesign, and identity change. Instead of continuing the previous architecture, VulcanOS introduces a new foundation focused on cleaner system design, better separation between components, and a more scalable operating system structure. The project aims to create a complete computing environment from the ground up, including a custom kernel, drivers, userspace, graphical desktop environment, and system utilities. Written primarily in C, with low-level assembly used where required, VulcanOS is an educational showcase project
+
+---
 
 # Brief History
 
@@ -33,6 +37,8 @@ A new identity
 A redesigned kernel structure 
 A new long-term direction 
 The goal is to build a cleaner and more maintainable operating system foundation.
+
+---
 
 
 
