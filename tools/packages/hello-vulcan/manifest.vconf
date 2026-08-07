@@ -1,0 +1,8 @@
+name: hello-vulcan
+version: 1.0.0
+description: A minimal example VulcanOS package, demonstrating vpkg
+depends: 
+
+[files]
+share/hello.txt -> /packages/hello-vulcan/hello.txt
+config/hello.conf -> /config/hello-vulcan.conf

@@ -1,0 +1,9 @@
+Hello from a real VulcanOS package!
+
+This file was installed by vpkg, VulcanOS's own package manager,
+from a .vpk archive built by tools/vpkbuild.py and compiled directly
+into the kernel image via tools/bin2c.py.
+
+If you can read this file at /packages/hello-vulcan/hello.txt, vpkg
+genuinely works end to end: archive parsing, manifest parsing, and
+real VFS file installation all functioned correctly.

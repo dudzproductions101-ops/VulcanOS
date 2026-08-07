@@ -1,0 +1,8 @@
+name: vulcanfetch
+version: 1.0.0
+description: A fastfetch-style system information tool for VulcanOS
+depends: 
+
+[files]
+bin/vulcanfetch -> /bin/vulcanfetch
+config/vulcanfetch.conf -> /config/vulcanfetch.conf

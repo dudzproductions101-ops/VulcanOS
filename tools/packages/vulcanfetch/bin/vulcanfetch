@@ -1,0 +1,69 @@
+#!/bin/sh
+# vulcanfetch - A fast system fetch for VulcanOS
+
+# Read config if it exists
+CONFIG_FILE="/config/vulcanfetch.conf"
+USE_COLORS="true"
+if [ -f "$CONFIG_FILE" ]; then
+    grep -q "colors = false" "$CONFIG_FILE" && USE_COLORS="false"
+fi
+
+# Color Definitions
+if [ "$USE_COLORS" = "true" ]; then
+    C='\033[1;31m' # Vulcan Red (Bold)
+    W='\033[0m'    # Reset
+    G='\033[1;30m' # Dark Gray (Bold)
+else
+    C=''
+    W=''
+    G=''
+fi
+
+# Gather System Info
+USER=${USER:-"vulcan"}
+HOST=$(hostname 2>/dev/null || echo "vulcan-host")
+OS="VulcanOS"
+KERNEL="Unknown"
+if [ -f /proc/version ]; then
+    KERNEL=$(awk '{print $3}' /proc/version)
+fi
+
+# Uptime parsing
+UPTIME="Unknown"
+if [ -f /proc/uptime ]; then
+    uptime_sec=$(cut -d. -f1 /proc/uptime)
+    up_h=$((uptime_sec / 3600))
+    up_m=$(((uptime_sec % 3600) / 60))
+    UPTIME="${up_h}h ${up_m}m"
+fi
+
+# Memory parsing
+MEM="Unknown"
+if [ -f /proc/meminfo ]; then
+    mem_total=$(grep MemTotal /proc/meminfo | awk '{print $2}')
+    mem_free=$(grep MemFree /proc/meminfo | awk '{print $2}')
+    if [ -n "$mem_total" ] && [ -n "$mem_free" ]; then
+        used=$(((mem_total - mem_free) / 1024))
+        total=$((mem_total / 1024))
+        MEM="${used}MB / ${total}MB"
+    fi
+fi
+
+# Output the Fetch
+printf "\n"
+printf "${C}                     \`'\`\`''\`.${W}\n"
+printf "${C}                     .'.\`\`'\`${W}\n"
+printf "${C}                  .'\`..'''\`.${W}\n"
+printf "${C}                    \`\`\`\`.'\`${W}\n"
+printf "${C}                  xl\"\"\`\`\"\"lx                   ${C}%s${W}@${C}%s\n" "$USER" "$HOST"
+printf "${C}                 X8Xxx..xxX8X                  ${G}-------------------\n"
+printf "${C}                 8X8bdX8bd8X8                  ${C}OS:     ${W}%s\n" "$OS"
+printf "${C}                dX8Xbd8XbdX8Xb                 ${C}Kernel: ${W}%s\n" "$KERNEL"
+printf "${C}               dX8Xbd8X8XbdX8Xb                ${C}Uptime: ${W}%s\n" "$UPTIME"
+printf "${C}              dX8Xbd8X8X8XbdX8Xb               ${C}Memory: ${W}%s\n" "$MEM"
+printf "${C}            .dX8Xbd8X8X8X8XbdX8Xb.${W}\n"
+printf "${C}          .d8X8Xbd8X8X8X8X8XbdX8X8b.${W}\n"
+printf "${C}      _.-dX8X8Xbd8X8X8X8X8X8XdbX8X8Xb-._${W}\n"
+printf "${C}   .-d8X8X8X8bdX8X8X8X8X8X8X8X8db8X8X8X8b-.${W}\n"
+printf "${C}.-d8X8X8X8X8bdX8X8X8X8X8X8X8X8X8db8X8X8-RG-b-.${W}\n"
+printf "\n"
