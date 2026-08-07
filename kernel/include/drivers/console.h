@@ -1,23 +1,7 @@
-
-
-
-
-
-
-
-
-
-
-
-
-
 #ifndef VULCAN_DRIVERS_CONSOLE_H
 #define VULCAN_DRIVERS_CONSOLE_H
 
 #include "types.h"
-
-
-
 
 enum vga_color {
     VGA_BLACK = 0,

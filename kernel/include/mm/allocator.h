@@ -1,16 +1,3 @@
-
-
-
-
-
-
-
-
-
-
-
-
-
 #ifndef VULCAN_MM_ALLOCATOR_H
 #define VULCAN_MM_ALLOCATOR_H
 

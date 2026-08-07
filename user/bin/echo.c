@@ -1,14 +1,3 @@
-
-
-
-
-
-
-
-
-
-
-
 #include "stdio.h"
 
 int echo_main(int argc, char **argv)

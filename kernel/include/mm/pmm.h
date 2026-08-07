@@ -1,17 +1,3 @@
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 #ifndef VULCAN_MM_PMM_H
 #define VULCAN_MM_PMM_H
 
@@ -19,23 +5,9 @@
 
 #define PMM_FRAME_SIZE 4096
 
-
-
-
-
-
-
 void pmm_init(u64 mb2_info_addr);
 
-
-
-
-
-
 paddr_t pmm_alloc_frame(void);
-
-
-
 
 void pmm_free_frame(paddr_t addr);
 

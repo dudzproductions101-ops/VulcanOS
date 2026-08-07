@@ -1,19 +1,4 @@
-
-
-
-
-
-
-
-
-
-
-
 #include "pkg/embedded_packages.h"
-
-
-
-
 
 extern const u8 g_pkg_hello_vulcan[];
 extern const usize g_pkg_hello_vulcan_size;
@@ -21,24 +6,10 @@ extern const usize g_pkg_hello_vulcan_size;
 static const struct embedded_package registry[] = {
     { "hello-vulcan", g_pkg_hello_vulcan, 0 
 
-
-
-
-
-
-
     },
 };
 
 #define REGISTRY_COUNT (sizeof(registry) / sizeof(registry[0]))
-
-
-
-
-
-
-
-
 
 static void ensure_sizes_patched(void)
 {
@@ -46,8 +17,6 @@ static void ensure_sizes_patched(void)
     if (patched) {
         return;
     }
-    
-
 
     ((struct embedded_package *)&registry[0])->size = g_pkg_hello_vulcan_size;
     patched = true;

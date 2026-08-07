@@ -1,11 +1,3 @@
-
-
-
-
-
-
-
-
 #ifndef VULCAN_GRAPHICS_H
 #define VULCAN_GRAPHICS_H
 

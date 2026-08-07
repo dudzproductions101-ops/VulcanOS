@@ -1,46 +1,7 @@
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 #include "stdio.h"
 #include "string.h"
 #include "fs/vfs.h"
 #include "drivers/console.h"
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 #define VULCAN_FD_OFFSET 3
 
@@ -161,10 +122,6 @@ int open(const char *path, int flags)
 {
     (void)flags; 
 
-
-
-
-
     char abs_path[VULCAN_PATH_MAX];
     if (!resolve_path(path, abs_path)) {
         return -1;
@@ -280,11 +237,6 @@ ssize_t read(int fd, void *buf, usize count)
         extern char keyboard_read(void);
         u8 *out = buf;
         usize got = 0;
-        
-
-
-
-
 
         while (got < count) {
             char c = keyboard_read();
@@ -325,18 +277,6 @@ ssize_t write(int fd, const void *buf, usize count)
     return vfs_write((vulcan_fd_t)(fd - VULCAN_FD_OFFSET), buf, count);
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
 typedef __builtin_va_list va_list;
 #define va_start(ap, last) __builtin_va_start(ap, last)
 #define va_arg(ap, type)   __builtin_va_arg(ap, type)
@@ -354,11 +294,6 @@ static void sink_putc(struct printf_sink *sink, char c)
     if (sink->len < PRINTF_BUF_MAX - 1) {
         sink->buf[sink->len++] = c;
     }
-    
-
-
-
-
 
 }
 
@@ -471,12 +406,6 @@ int printf(const char *fmt, ...)
     write(VULCAN_STDOUT, sink.buf, sink.len);
     return (int)sink.len;
 }
-
-
-
-
-
-
 
 int vulcan_readdir(const char *path, unsigned long index, struct vulcan_dirent *out)
 {

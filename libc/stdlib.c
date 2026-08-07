@@ -1,43 +1,3 @@
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 #include "stdlib.h"
 #include "drivers/timer.h"
 #include "mm/allocator.h"
@@ -94,9 +54,6 @@ __attribute__((noreturn)) void exit(int status)
 
     self->state = THREAD_DEAD;
     scheduler_reschedule();
-
-    
-
 
     extern __attribute__((noreturn)) void panic(const char *msg);
     panic("exit: scheduler_reschedule returned for a DEAD thread");

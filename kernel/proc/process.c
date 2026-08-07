@@ -1,7 +1,3 @@
-
-
-
-
 #include "proc/process.h"
 #include "proc/thread.h"
 #include "mm/allocator.h"
@@ -35,9 +31,6 @@ struct process *process_create(const char *name, void (*entry_point)(void))
     p->thread_count = 0;
     p->next = NULL;
 
-    
-
-
     p->page_table_root = read_cr3();
 
     struct thread *t = thread_create(p, entry_point);
@@ -54,11 +47,6 @@ void process_exit(struct process *p, int exit_code)
 {
     p->state = PROCESS_EXITED;
     p->exit_code = exit_code;
-
-    
-
-
-
 
     printk_level(LOG_INFO, "process: pid=%llu \"%s\" exited with code %d\n",
                  p->pid, p->name, exit_code);

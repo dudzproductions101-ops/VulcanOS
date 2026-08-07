@@ -1,32 +1,3 @@
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 #ifndef VULCAN_PKG_VPKG_H
 #define VULCAN_PKG_VPKG_H
 
@@ -47,48 +18,19 @@ enum vpkg_result {
     VPKG_ERR_DB_FULL,
 };
 
-
-
-
 struct vpkg_record {
     char name[64];
     char version[32];
     char description[128];
     u32 file_count;             
 
-
-
-
-
-
-
-
 };
 
 void vpkg_init(void);
 
-
-
-
-
 enum vpkg_result vpkg_install(const u8 *data, usize size);
 
-
-
-
-
-
-
-
-
-
-
-
-
 enum vpkg_result vpkg_remove(const char *name);
-
-
-
 
 bool vpkg_list(u32 index, struct vpkg_record *out);
 

@@ -1,9 +1,3 @@
-
-
-
-
-
-
 #include "fs/vfs.h"
 #include "printk.h"
 #include "panic.h"
@@ -36,10 +30,6 @@ bool vfs_mount(const char *prefix, struct inode *root)
 {
     for (int i = 0; i < VULCAN_MAX_MOUNTS; i++) {
         if (mounts[i].in_use && mounts[i].prefix[0] == prefix[0]) {
-            
-
-
-
 
             usize i_len = str_len(mounts[i].prefix);
             usize p_len = str_len(prefix);
@@ -81,9 +71,6 @@ bool vfs_mount(const char *prefix, struct inode *root)
     return false;
 }
 
-
-
-
 static struct mount *find_mount_for_path(const char *path)
 {
     struct mount *best = NULL;
@@ -117,9 +104,6 @@ struct inode *vfs_resolve(const char *path)
     if (path[0] != '/') {
         return NULL; 
 
-
-
-
     }
 
     struct mount *m = find_mount_for_path(path);
@@ -128,11 +112,6 @@ struct inode *vfs_resolve(const char *path)
     }
 
     struct inode *current = m->root;
-
-    
-
-
-
 
     usize prefix_len = str_len(m->prefix);
     const char *remainder = path + prefix_len;
@@ -244,10 +223,6 @@ isize vfs_write(vulcan_fd_t fd, const void *buf, usize size)
     }
     return result;
 }
-
-
-
-
 
 static bool split_parent_and_name(const char *path, char *parent_out, char *name_out)
 {

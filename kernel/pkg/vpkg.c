@@ -1,22 +1,3 @@
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 #include "pkg/vpkg.h"
 #include "pkg/vpk_archive.h"
 #include "pkg/vpk_manifest.h"
@@ -38,10 +19,6 @@ static bool names_equal(const char *a, const char *b)
     }
     return *a == *b;
 }
-
-
-
-
 
 static void copy_bounded(char *dest, usize dest_size, const char *src)
 {
@@ -75,12 +52,6 @@ static void append_u32(char *buf, usize buf_size, usize *pos, u32 value)
     }
 }
 
-
-
-
-
-
-
 static void persist_db(void)
 {
     char buf[4096];
@@ -99,8 +70,6 @@ static void persist_db(void)
 
     vfs_unlink(VPKG_DB_PATH); 
 
-
-
     vfs_create(VPKG_DB_PATH, INODE_FILE);
     vulcan_fd_t fd = vfs_open(VPKG_DB_PATH);
     if (fd != VULCAN_FD_INVALID) {
@@ -112,9 +81,6 @@ static void persist_db(void)
 void vpkg_init(void)
 {
     installed_count = 0;
-    
-
-
 
     printk_level(LOG_INFO, "vpkg: initialized (db at %s)\n", VPKG_DB_PATH);
 }
@@ -129,36 +95,6 @@ static bool find_installed_index(const char *name, u32 *out_index)
     }
     return false;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 static void ensure_parent_dirs_exist(const char *path)
 {
@@ -190,13 +126,9 @@ static void ensure_parent_dirs_exist(const char *path)
             }
 
             if (*p == '\0') {
-                
 
                 break;
             }
-
-            
-
 
             if (full_len < sizeof(full_path) - 1) {
                 full_path[full_len++] = '/';
@@ -205,16 +137,6 @@ static void ensure_parent_dirs_exist(const char *path)
                 full_path[full_len++] = component[i];
             }
             full_path[full_len] = '\0';
-
-            
-
-
-
-
-
-
-
-
 
             bool created = vfs_create(full_path, INODE_DIRECTORY);
             printk_level(LOG_DEBUG, "vpkg: mkdir %s: %s\n",
@@ -229,14 +151,6 @@ static void ensure_parent_dirs_exist(const char *path)
         }
     }
 }
-
-
-
-
-
-
-
-
 
 static bool install_one_file(const struct vpk_entry *entry, const char *dest_path)
 {
@@ -369,9 +283,6 @@ enum vpkg_result vpkg_remove(const char *name)
     if (!find_installed_index(name, &index)) {
         return VPKG_ERR_NOT_INSTALLED;
     }
-
-    
-
 
     for (u32 i = index; i < installed_count - 1; i++) {
         installed[i] = installed[i + 1];

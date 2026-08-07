@@ -1,10 +1,7 @@
-
-
 #include "drivers/pci.h"
 #include "arch/x86_64/cpu.h"
 #include "mm/allocator.h"
 #include "printk.h"
-
 
 static inline usize append_str(char *buf, usize buf_size, usize off, const char *s)
 {
@@ -33,10 +30,8 @@ static inline usize append_hex_u16(char *buf, usize buf_size, usize off, u16 v)
     return off;
 }
 
-
 static char *report_buf = NULL;
 static usize report_len = 0;
-
 
 #define MAX_PCI_DRIVERS 16
 static const struct pci_driver *registered_pci_drivers[MAX_PCI_DRIVERS];
@@ -71,7 +66,7 @@ u32 pci_config_read32(u8 bus, u8 dev, u8 func, u8 offset)
 
 void pci_init(void)
 {
-    
+
     const usize buf_size = 16384;
     report_buf = kmalloc(buf_size);
     if (!report_buf) {
@@ -95,15 +90,14 @@ void pci_init(void)
                 u8 subclass = (class_reg >> 16) & 0xFF;
                 u8 class_code = (class_reg >> 24) & 0xFF;
 
-                
                 off = append_str(report_buf, buf_size, off, "pci ");
-                
+
                 off = append_hex_u8(report_buf, buf_size, off, bus);
                 off = append_str(report_buf, buf_size, off, ":");
-                
+
                 off = append_hex_u8(report_buf, buf_size, off, dev);
                 off = append_str(report_buf, buf_size, off, ".");
-                
+
                 if (off + 2 < buf_size) {
                     report_buf[off++] = '0' + (func % 10);
                 }
@@ -119,11 +113,10 @@ void pci_init(void)
                 off = append_hex_u8(report_buf, buf_size, off, prog_if);
                 if (off + 1 < buf_size) report_buf[off++] = '\n';
                 if (off + 128 >= buf_size) {
-                    
+
                     report_len = off;
                 }
 
-                
                 for (usize di = 0; di < registered_pci_driver_count; di++) {
                     const struct pci_driver *pd = registered_pci_drivers[di];
                     bool match = true;

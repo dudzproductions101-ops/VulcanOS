@@ -1,37 +1,8 @@
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 #ifndef VULCAN_PKG_VPK_MANIFEST_H
 #define VULCAN_PKG_VPK_MANIFEST_H
 
 #include "types.h"
 #include "pkg/vpk_archive.h" 
-
 
 #define VPK_MANIFEST_FILE "manifest.vconf"
 
@@ -44,10 +15,6 @@
 struct vpk_file_mapping {
     char source[VPK_MAX_PATH];       
     char dest[256];                   
-
-
-
-
 
 };
 
@@ -62,11 +29,6 @@ struct vpk_manifest {
     struct vpk_file_mapping files[VPK_MAX_FILE_MAPPINGS];
     u32 files_count;
 };
-
-
-
-
-
 
 bool vpk_manifest_parse(const char *text, usize len, struct vpk_manifest *out);
 

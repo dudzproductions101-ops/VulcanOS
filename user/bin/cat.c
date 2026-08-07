@@ -1,16 +1,3 @@
-
-
-
-
-
-
-
-
-
-
-
-
-
 #include "stdio.h"
 
 #define CAT_BUF_SIZE 512

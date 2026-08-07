@@ -1,10 +1,3 @@
-
-
-
-
-
-
-
 #include "drivers/console.h"
 #include "arch/x86_64/cpu.h"
 
@@ -12,33 +5,10 @@
 #define VGA_HEIGHT 25
 #define VGA_MEMORY ((volatile u16 *)0xB8000)
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 #define COM1_PORT 0x3F8
 
 static void debug_serial_putc(char c)
 {
-    
-
-
-
-
 
     for (int i = 0; i < 10000; i++) {
         if (inb(COM1_PORT + 5) & 0x20) {
@@ -65,10 +35,6 @@ static inline u8 vga_color(enum vga_color fg, enum vga_color bg)
 static void console_move_cursor(void)
 {
     u16 pos = (u16)(cursor_row * VGA_WIDTH + cursor_col);
-
-    
-
-
 
     outb(0x3D4, 0x0F);
     outb(0x3D5, (u8)(pos & 0xFF));
@@ -117,18 +83,6 @@ void console_set_color(enum vga_color fg, enum vga_color bg)
 void console_putc(char c)
 {
     debug_serial_putc(c); 
-
-
-
-
-
-
-
-
-
-
-
-
 
     if (c == '\n') {
         cursor_col = 0;

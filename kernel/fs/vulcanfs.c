@@ -1,14 +1,3 @@
-
-
-
-
-
-
-
-
-
-
-
 #include "fs/vulcanfs.h"
 #include "fs/vfs.h"
 #include "drivers/framebuffer.h"
@@ -23,19 +12,11 @@
 struct vulcanfs_node {
     struct inode *node;             
 
-    
     u8 *data;
     usize data_capacity;
 
-    
     enum vulcanfs_device_kind device_kind;
     char device_name[VULCAN_FILENAME_MAX];
-
-    
-
-
-
-
 
     struct vulcanfs_node *children[VULCANFS_MAX_CHILDREN];
     char child_names[VULCANFS_MAX_CHILDREN][VULCAN_FILENAME_MAX];
@@ -67,9 +48,6 @@ static bool names_equal(const char *a, const char *b)
 
 static const struct inode_ops vulcanfs_ops;  
 
-
-
-
 static struct inode *vulcanfs_new_inode(enum inode_type type)
 {
     struct inode *node = kmalloc(sizeof(struct inode));
@@ -85,9 +63,6 @@ static struct inode *vulcanfs_new_inode(enum inode_type type)
     node->permissions = VULCAN_PERM_READ | VULCAN_PERM_WRITE;
     if (type == INODE_DIRECTORY) {
         node->permissions |= VULCAN_PERM_EXEC; 
-
-
-
 
     }
     node->size = 0;
@@ -151,8 +126,6 @@ static isize vulcanfs_device_read(struct inode *node, void *buf, usize size, usi
         if (result >= 0) {
             return result;
         }
-
-        
 
         u64 size_bytes = 0;
         u32 pref = 0;
@@ -370,7 +343,7 @@ struct inode *vulcanfs_create_device(struct inode *dir, const char *name,
 
     struct vulcanfs_node *child_priv = child->private_data;
     child_priv->device_kind = kind;
-    
+
     int ni = 0;
     for (; ni < VULCAN_FILENAME_MAX - 1 && name[ni]; ni++) child_priv->device_name[ni] = name[ni];
     child_priv->device_name[ni] = '\0';
@@ -401,9 +374,6 @@ static bool vulcanfs_unlink_child(struct inode *dir, const char *name)
             return false; 
 
         }
-
-        
-
 
         for (int j = i; j < priv->child_count - 1; j++) {
             priv->children[j] = priv->children[j + 1];

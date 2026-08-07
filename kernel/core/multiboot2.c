@@ -1,7 +1,3 @@
-
-
-
-
 #include "multiboot2.h"
 
 void mb2_walk_tags(u64 mb2_info_addr, mb2_tag_visitor_t visit, void *ctx)
@@ -20,8 +16,6 @@ void mb2_walk_tags(u64 mb2_info_addr, mb2_tag_visitor_t visit, void *ctx)
         if (!visit(tag, ctx)) {
             return;
         }
-
-        
 
         u32 advance = (tag->size + 7) & ~(u32)7;
         ptr += advance;

@@ -1,11 +1,3 @@
-
-
-
-
-
-
-
-
 #ifndef VULCAN_DRIVERS_DISPLAY_H
 #define VULCAN_DRIVERS_DISPLAY_H
 

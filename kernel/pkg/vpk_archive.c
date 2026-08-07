@@ -1,22 +1,4 @@
-
-
-
-
-
-
-
-
-
-
-
-
-
 #include "pkg/vpk_archive.h"
-
-
-
-
-
 
 static u16 read_u16le(const u8 *p)
 {
@@ -56,7 +38,6 @@ bool vpk_parse(const u8 *data, usize size, struct vpk_archive *out)
     if (out->format_version != VPK_FORMAT_VERSION) {
         return false; 
 
-
     }
 
     out->entry_count = read_u32le(data + offset);
@@ -87,27 +68,8 @@ bool vpk_parse(const u8 *data, usize size, struct vpk_archive *out)
         u64 content_len = read_u64le(data + offset);
         offset += 8;
 
-        
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
         if (content_len > size - offset) {
             return false; 
-
 
         }
         out->entries[i].content = data + offset;

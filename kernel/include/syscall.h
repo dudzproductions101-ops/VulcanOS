@@ -1,5 +1,3 @@
-
-
 #ifndef VULCAN_SYSCALL_H
 #define VULCAN_SYSCALL_H
 

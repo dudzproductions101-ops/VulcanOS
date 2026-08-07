@@ -1,15 +1,3 @@
-
-
-
-
-
-
-
-
-
-
-
-
 #include "stdio.h"
 
 int ls_main(int argc, char **argv)

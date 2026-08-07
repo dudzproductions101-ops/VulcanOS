@@ -1,14 +1,3 @@
-
-
-
-
-
-
-
-
-
-
-
 #ifndef VULCAN_TYPES_H
 #define VULCAN_TYPES_H
 
@@ -22,8 +11,6 @@ typedef signed short       i16;
 typedef signed int         i32;
 typedef signed long long   i64;
 
-
-
 typedef unsigned long      uptr;
 typedef signed long        iptr;
 typedef unsigned long      usize;
@@ -34,10 +21,6 @@ typedef signed long        isize;
 typedef u8 bool;
 #define true  1
 #define false 0
-
-
-
-
 
 typedef u64 paddr_t;
 typedef u64 vaddr_t;

@@ -1,21 +1,3 @@
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 #include "shell.h"
 #include "stdio.h"
 #include "stdlib.h"
@@ -23,9 +5,6 @@
 
 #define VULSH_LINE_MAX 256
 #define VULSH_MAX_ARGS 16
-
-
-
 
 extern int ls_main(int argc, char **argv);
 extern int cat_main(int argc, char **argv);
@@ -36,13 +15,6 @@ static void print_prompt(void)
 {
     printf("vulsh> ");
 }
-
-
-
-
-
-
-
 
 static void read_line(char *buf, usize max_len)
 {
@@ -67,7 +39,6 @@ static void read_line(char *buf, usize max_len)
                 len--;
                 printf("\b \b"); 
 
-
             }
             continue;
         }
@@ -76,19 +47,11 @@ static void read_line(char *buf, usize max_len)
             buf[len++] = c;
             printf("%c", c); 
 
-
-
         }
     }
 
     buf[len] = '\0';
 }
-
-
-
-
-
-
 
 static int tokenize(char *line, char **argv, int max_args)
 {
@@ -174,6 +137,5 @@ int vulsh_main(int argc, char **argv)
     }
 
     return 0; 
-
 
 }

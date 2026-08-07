@@ -1,18 +1,7 @@
-
-
-
-
-
-
-
-
-
-
 #ifndef VULCAN_ARCH_INTERRUPTS_H
 #define VULCAN_ARCH_INTERRUPTS_H
 
 #include "types.h"
-
 
 #define VEC_DIVIDE_ERROR        0
 #define VEC_DEBUG                1
@@ -33,20 +22,11 @@
 #define VEC_MACHINE_CHECK        18
 #define VEC_SIMD_FP              19
 
-
-
-
 #define IRQ_BASE       32
 #define IRQ_TIMER      (IRQ_BASE + 0)
 #define IRQ_KEYBOARD   (IRQ_BASE + 1)
 #define IRQ_CASCADE    (IRQ_BASE + 2)  
 #define IRQ_RTC        (IRQ_BASE + 8)
-
-
-
-
-
-
 
 struct interrupt_frame {
     u64 r15, r14, r13, r12, r11, r10, r9, r8;

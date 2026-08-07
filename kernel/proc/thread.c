@@ -1,10 +1,3 @@
-
-
-
-
-
-
-
 #include "proc/thread.h"
 #include "proc/process.h"
 #include "mm/allocator.h"
@@ -13,69 +6,16 @@
 
 static u64 next_tid = 1;
 
-
-
-
-
-
-
-
-
-
-
-
 static struct thread *current_thread_being_started = NULL;
-
-
-
-
-
-
-
-
-
-
-
 
 static void thread_trampoline(void)
 {
     struct thread *self = current_thread_being_started;
     void (*entry)(void) = self->entry_point;
 
-    
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     sti();
 
     entry();
-
-    
-
-
-
-
 
     self->state = THREAD_DEAD;
     for (;;) {
@@ -102,13 +42,6 @@ struct thread *thread_create(struct process *owner, void (*entry_point)(void))
         panic("thread_create: out of memory allocating kernel stack");
     }
     t->kernel_stack_top = t->kernel_stack + KERNEL_STACK_SIZE;
-
-    
-
-
-
-
-
 
     u64 *stack_top = (u64 *)t->kernel_stack_top;
     stack_top--;

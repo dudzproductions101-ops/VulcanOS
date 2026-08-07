@@ -1,38 +1,3 @@
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 #ifndef VULCAN_PKG_VPK_ARCHIVE_H
 #define VULCAN_PKG_VPK_ARCHIVE_H
 
@@ -49,7 +14,6 @@ struct vpk_entry {
     char path[VPK_MAX_PATH];
     const u8 *content;    
 
-
     u64 content_len;
 };
 
@@ -59,27 +23,7 @@ struct vpk_archive {
     struct vpk_entry entries[VPK_MAX_ENTRIES];
 };
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 bool vpk_parse(const u8 *data, usize size, struct vpk_archive *out);
-
-
-
-
 
 const struct vpk_entry *vpk_find(const struct vpk_archive *archive, const char *path);
 

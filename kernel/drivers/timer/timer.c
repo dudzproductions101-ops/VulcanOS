@@ -1,10 +1,3 @@
-
-
-
-
-
-
-
 #include "drivers/timer.h"
 #include "arch/x86_64/interrupts.h"
 #include "arch/x86_64/cpu.h"
@@ -21,30 +14,12 @@ static void timer_irq_handler(struct interrupt_frame *frame)
     (void)frame;
     ticks++;
 
-    
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     scheduler_tick();
 }
 
 void timer_init(void)
 {
     u16 divisor = (u16)(PIT_BASE_FREQ_HZ / PIT_FREQUENCY_HZ);
-
-    
-
 
     outb(PIT_COMMAND, 0x36);
     outb(PIT_CHANNEL0_DATA, (u8)(divisor & 0xFF));

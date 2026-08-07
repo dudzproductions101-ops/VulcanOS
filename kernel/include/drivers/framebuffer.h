@@ -1,14 +1,3 @@
-
-
-
-
-
-
-
-
-
-
-
 #ifndef VULCAN_DRIVERS_FRAMEBUFFER_H
 #define VULCAN_DRIVERS_FRAMEBUFFER_H
 

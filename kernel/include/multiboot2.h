@@ -1,19 +1,3 @@
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 #ifndef VULCAN_MULTIBOOT2_H
 #define VULCAN_MULTIBOOT2_H
 
@@ -55,10 +39,6 @@ struct mb2_info_header {
     u32 total_size;
     u32 reserved;
 } __attribute__((packed));
-
-
-
-
 
 typedef bool (*mb2_tag_visitor_t)(struct mb2_tag *tag, void *ctx);
 void mb2_walk_tags(u64 mb2_info_addr, mb2_tag_visitor_t visit, void *ctx);

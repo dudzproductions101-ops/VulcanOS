@@ -1,13 +1,3 @@
-
-
-
-
-
-
-
-
-
-
 #include "drivers/keyboard.h"
 #include "arch/x86_64/interrupts.h"
 #include "arch/x86_64/cpu.h"
@@ -21,10 +11,6 @@ static volatile usize kbd_head = 0;
 static volatile usize kbd_tail = 0;
 
 static bool shift_held = false;
-
-
-
-
 
 static const char scancode_ascii[128] = {
     0, 27, '1','2','3','4','5','6','7','8','9','0','-','=','\b',

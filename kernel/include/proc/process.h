@@ -1,20 +1,3 @@
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 #ifndef VULCAN_PROC_PROCESS_H
 #define VULCAN_PROC_PROCESS_H
 
@@ -38,29 +21,14 @@ struct process {
 
     paddr_t page_table_root;   
 
-
-
     struct thread *threads[PROCESS_MAX_THREADS];
     int thread_count;
 
     struct process *next;      
 
-
-
-
 };
 
-
-
-
-
 struct process *process_create(const char *name, void (*entry_point)(void));
-
-
-
-
-
-
 
 void process_exit(struct process *p, int exit_code);
 

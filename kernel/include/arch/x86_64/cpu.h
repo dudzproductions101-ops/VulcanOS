@@ -1,19 +1,7 @@
-
-
-
-
-
-
-
-
-
-
 #ifndef VULCAN_ARCH_CPU_H
 #define VULCAN_ARCH_CPU_H
 
 #include "types.h"
-
-
 
 static inline void outb(u16 port, u8 val)
 {
@@ -39,16 +27,10 @@ static inline u16 inw(u16 port)
     return ret;
 }
 
-
-
-
-
 static inline void io_wait(void)
 {
     outb(0x80, 0);
 }
-
-
 
 static inline void cli(void)
 {
@@ -60,19 +42,10 @@ static inline void sti(void)
     __asm__ volatile ("sti");
 }
 
-
-
 static inline void hlt(void)
 {
     __asm__ volatile ("hlt");
 }
-
-
-
-
-
-
-
 
 __attribute__((noreturn)) static inline void halt_forever(void)
 {
@@ -81,8 +54,6 @@ __attribute__((noreturn)) static inline void halt_forever(void)
         hlt();
     }
 }
-
-
 
 static inline u64 read_cr2(void)
 {
@@ -102,8 +73,6 @@ static inline void write_cr3(u64 val)
 {
     __asm__ volatile ("mov %0, %%cr3" : : "r"(val) : "memory");
 }
-
-
 
 struct cpu_vendor {
     char id[13]; 

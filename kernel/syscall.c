@@ -3,12 +3,6 @@
 #include "proc/process.h"
 #include "printk.h"
 
-
-
-
-
-
-
 void syscall_handle(struct interrupt_frame *frame)
 {
     u64 num = frame->rax;
@@ -25,8 +19,6 @@ void syscall_handle(struct interrupt_frame *frame)
         u64 fd = frame->rdi;
         const char *buf = (const char *)frame->rsi;
         u64 len = frame->rdx;
-        
-
 
         printk_level(LOG_INFO, "syscall: write fd=%llu len=%llu buf=%p\n", fd, len, buf);
         ret = len;

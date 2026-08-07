@@ -1,25 +1,13 @@
-
-
-
-
-
-
-
-
-
 #ifndef VULCAN_ARCH_GDT_H
 #define VULCAN_ARCH_GDT_H
 
 #include "types.h"
-
-
 
 #define GDT_SEL_KERNEL_CODE 0x08
 #define GDT_SEL_KERNEL_DATA 0x10
 #define GDT_SEL_USER_CODE   0x18
 #define GDT_SEL_USER_DATA   0x20
 #define GDT_SEL_TSS         0x28
-
 
 struct gdt_entry {
     u16 limit_low;
@@ -29,8 +17,6 @@ struct gdt_entry {
     u8  granularity;
     u8  base_high;
 } __attribute__((packed));
-
-
 
 struct tss_entry_low {
     u16 length;
@@ -50,11 +36,6 @@ struct gdt_ptr {
     u16 limit;
     u64 base;
 } __attribute__((packed));
-
-
-
-
-
 
 struct tss {
     u32 reserved0;

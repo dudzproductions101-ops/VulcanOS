@@ -34,7 +34,6 @@ void graphics_draw_boot_ui(void)
     display_draw_rect(window_x, window_y, window_width, window_height, FRAMEBUFFER_RGB(40, 48, 72));
     display_draw_rect(window_x + 12, window_y + 12, window_width - 24, window_height - 24, FRAMEBUFFER_RGB(20, 28, 56));
 
-    
     display_draw_rect(window_x + 16, window_y + 28, window_width - 32, 24, FRAMEBUFFER_RGB(92, 159, 222));
     display_draw_rect(window_x + 16, window_y + 64, 100, 10, FRAMEBUFFER_RGB(112, 186, 255));
     display_draw_rect(window_x + 16, window_y + 84, window_width - 48, 10, FRAMEBUFFER_RGB(72, 122, 194));

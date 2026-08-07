@@ -1,20 +1,9 @@
-
-
-
-
-
-
-
-
-
-
 #ifndef VULCAN_ARCH_IDT_H
 #define VULCAN_ARCH_IDT_H
 
 #include "types.h"
 
 #define IDT_ENTRIES 256
-
 
 #define IDT_GATE_INTERRUPT 0x8E  
 #define IDT_GATE_TRAP      0x8F  

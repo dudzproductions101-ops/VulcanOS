@@ -1,19 +1,3 @@
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 #include "string.h"
 
 usize strlen(const char *s)
@@ -31,11 +15,6 @@ int strcmp(const char *a, const char *b)
         a++;
         b++;
     }
-    
-
-
-
-
 
     return (int)(unsigned char)*a - (int)(unsigned char)*b;
 }
@@ -54,12 +33,6 @@ char *strcpy(char *dest, const char *src)
 {
     char *original_dest = dest;
     while ((*dest++ = *src++)) {
-        
-
-
-
-
-
 
     }
     return original_dest;
@@ -71,10 +44,6 @@ char *strncpy(char *dest, const char *src, usize n)
     for (; i < n && src[i]; i++) {
         dest[i] = src[i];
     }
-    
-
-
-
 
     for (; i < n; i++) {
         dest[i] = '\0';
@@ -101,9 +70,6 @@ char *strchr(const char *s, int c)
         }
         s++;
     }
-    
-
-
 
     if ((char)c == '\0') {
         return (char *)s;
@@ -149,10 +115,6 @@ char *strstr(const char *haystack, const char *needle)
 
 char *strdup(const char *s)
 {
-    
-
-
-
 
     extern void *malloc(usize size);
 
@@ -177,12 +139,6 @@ void *memcpy(void *dest, const void *src, usize n)
     return dest;
 }
 
-
-
-
-
-
-
 void *memmove(void *dest, const void *src, usize n)
 {
     u8 *d = dest;
@@ -193,15 +149,11 @@ void *memmove(void *dest, const void *src, usize n)
     }
 
     if (d < s) {
-        
-
 
         for (usize i = 0; i < n; i++) {
             d[i] = s[i];
         }
     } else {
-        
-
 
         for (usize i = n; i > 0; i--) {
             d[i - 1] = s[i - 1];

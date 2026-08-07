@@ -1,22 +1,7 @@
-
-
-
-
-
-
-
-
-
-
-
-
-
 #include "pkg/vpk_manifest.h"
 
 static void copy_trimmed(char *dest, usize dest_size, const char *start, const char *end)
 {
-    
-
 
     while (start < end && (*start == ' ' || *start == '\t')) {
         start++;
@@ -100,8 +85,6 @@ bool vpk_manifest_parse(const char *text, usize len, struct vpk_manifest *out)
             printk("vpk_manifest_parse: line #%u, len=%llu, in_files_section=%d\n",
                    line_iterations, (u64)line_len, (int)in_files_section);
 
-            
-
             const char *content_start = line_start;
             while (content_start < line_end && (*content_start == ' ' || *content_start == '\t')) {
                 content_start++;
@@ -149,11 +132,6 @@ bool vpk_manifest_parse(const char *text, usize len, struct vpk_manifest *out)
                     } else if (starts_with(key, "description")) {
                         copy_trimmed(out->description, sizeof(out->description), colon + 1, line_end);
                     } else if (starts_with(key, "depends")) {
-                        
-
-
-
-
 
                         const char *dep_start = colon + 1;
                         while (dep_start < line_end && (*dep_start == ' ' || *dep_start == '\t')) {
@@ -173,11 +151,6 @@ bool vpk_manifest_parse(const char *text, usize len, struct vpk_manifest *out)
                             dep_start = (comma < line_end) ? comma + 1 : line_end;
                         }
                     }
-                    
-
-
-
-
 
                 }
             }

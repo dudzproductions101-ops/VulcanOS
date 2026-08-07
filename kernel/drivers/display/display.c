@@ -1,11 +1,3 @@
-
-
-
-
-
-
-
-
 #include "drivers/display.h"
 #include "drivers/driver.h"
 #include "printk.h"

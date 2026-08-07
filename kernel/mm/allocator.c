@@ -1,23 +1,8 @@
-
-
-
-
-
-
-
-
-
-
-
-
 #include "mm/allocator.h"
 #include "mm/paging.h"
 #include "mm/pmm.h"
 #include "printk.h"
 #include "panic.h"
-
-
-
 
 #define KHEAP_VBASE (0xFFFFFFFF90000000ULL)
 #define KHEAP_MAX_SIZE (256ULL * 1024 * 1024) 
@@ -74,10 +59,6 @@ void kheap_init(void)
                  KHEAP_VBASE, KHEAP_MAX_SIZE / (1024 * 1024));
 }
 
-
-
-
-
 static inline usize align_up(usize n, usize align)
 {
     return (n + align - 1) & ~(align - 1);
@@ -95,9 +76,6 @@ void *kmalloc(usize size)
 
     while (curr) {
         if (curr->free && curr->size >= size) {
-            
-
-
 
             if (curr->size >= size + sizeof(struct block_header) + 16) {
                 struct block_header *remainder =
@@ -113,7 +91,6 @@ void *kmalloc(usize size)
 
             curr->free = false;
 
-            
             if (prev) {
                 prev->next_free = curr->next_free;
             } else {
@@ -127,9 +104,6 @@ void *kmalloc(usize size)
         prev = curr;
         curr = curr->next_free;
     }
-
-    
-
 
     if (!heap_grow(size)) {
         return NULL;
@@ -156,10 +130,5 @@ void kfree(void *ptr)
     block->free = true;
     block->next_free = free_list;
     free_list = block;
-
-    
-
-
-
 
 }

@@ -1,54 +1,7 @@
-
-
-
-
-
-
-
-
-
-
-
-
-
 #ifndef VULCAN_PROC_THREAD_H
 #define VULCAN_PROC_THREAD_H
 
 #include "types.h"
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 #define KERNEL_STACK_SIZE (64 * 1024)
 
@@ -58,19 +11,6 @@ enum thread_state {
     THREAD_BLOCKED,     
     THREAD_DEAD,        
 };
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 struct thread_context {
     u64 rbx;
@@ -96,51 +36,17 @@ struct thread {
 
     bool has_run;               
 
-
-
-
-
-
-
-
     struct process *owner;     
 
     struct thread *next;       
 
 };
 
-
-
-
-
-
-
 struct thread *thread_create(struct process *owner, void (*entry_point)(void));
-
-
-
-
-
-
 
 void thread_destroy(struct thread *t);
 
-
-
-
-
-
-
-
 void context_switch(struct thread_context *from, struct thread_context *to);
-
-
-
-
-
-
-
-
 
 void thread_prepare_first_switch(struct thread *t);
 

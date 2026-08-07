@@ -1,22 +1,7 @@
-
-
-
-
-
-
-
-
-
-
-
-
-
 #ifndef VULCAN_PRINTK_H
 #define VULCAN_PRINTK_H
 
 #include "types.h"
-
-
 
 enum log_level {
     LOG_DEBUG,

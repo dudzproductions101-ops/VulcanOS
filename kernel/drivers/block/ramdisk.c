@@ -33,7 +33,6 @@ isize ramdisk_read(u64 offset, void *buf, usize size)
 
 static bool ramdisk_probe(void)
 {
-    
 
     return ramdisk_available();
 }

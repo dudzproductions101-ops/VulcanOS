@@ -1,13 +1,3 @@
-
-
-
-
-
-
-
-
-
-
 #ifndef VULCAN_DRIVERS_TIMER_H
 #define VULCAN_DRIVERS_TIMER_H
 

@@ -120,7 +120,7 @@ static bool ahci_port_device_present(volatile struct ahci_port *port)
 static void ahci_port_start(volatile struct ahci_port *port)
 {
     while (port->cmd & AHCI_PORT_CMD_CR) {
-        
+
     }
     port->cmd |= AHCI_PORT_CMD_FRE;
     port->cmd |= AHCI_PORT_CMD_ST;

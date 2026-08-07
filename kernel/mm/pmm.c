@@ -1,27 +1,7 @@
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 #include "mm/pmm.h"
 #include "multiboot2.h"
 #include "printk.h"
 #include "panic.h"
-
-
-
-
 
 #define MAX_TRACKED_FRAMES (4ULL * 1024 * 1024 * 1024 / PMM_FRAME_SIZE)
 #define BITMAP_SIZE_BYTES (MAX_TRACKED_FRAMES / 8)
@@ -30,9 +10,6 @@ static u8 frame_bitmap[BITMAP_SIZE_BYTES];
 static u64 total_frames = 0;
 static u64 free_frames_count = 0;
 static u64 highest_frame_seen = 0;
-
-
-
 
 extern u8 kernel_start[];
 extern u8 kernel_end[];
@@ -110,10 +87,6 @@ static bool mmap_tag_visitor(struct mb2_tag *tag, void *ctx_ptr)
 
 void pmm_init(u64 mb2_info_addr)
 {
-    
-
-
-
 
     for (u64 i = 0; i < BITMAP_SIZE_BYTES; i++) {
         frame_bitmap[i] = 0xFF;
@@ -131,10 +104,6 @@ void pmm_init(u64 mb2_info_addr)
     if (total_frames > MAX_TRACKED_FRAMES) {
         total_frames = MAX_TRACKED_FRAMES;
     }
-
-    
-
-
 
     reserve_region(0x0, 0x100000);
     reserve_region((paddr_t)(uptr)kernel_start, (paddr_t)(uptr)kernel_end);

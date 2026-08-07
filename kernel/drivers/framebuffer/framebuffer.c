@@ -1,12 +1,3 @@
-
-
-
-
-
-
-
-
-
 #include "drivers/framebuffer.h"
 #include "multiboot2.h"
 #include "printk.h"

@@ -1,14 +1,5 @@
-
-
-
-
-
-
-
-
 #ifndef VULCAN_CONFIG_H
 #define VULCAN_CONFIG_H
-
 
 #define VULCAN_OS_NAME     "VulcanOS"
 #define VULCAN_VERSION_MAJ 0
@@ -16,43 +7,9 @@
 #define VULCAN_VERSION_PATCH 0
 #define VULCAN_CODENAME    "Ember"
 
-
-
-
 #define VULCAN_KERNEL_VBASE 0xFFFFFFFF80000000UL
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 #define VULCAN_BOOT_STACK_SIZE (128 * 1024)
-
-
-
 
 #define VULCAN_MAX_CPUS 32
 

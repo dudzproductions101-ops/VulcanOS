@@ -52,7 +52,6 @@ static void crude_busy_wait(u64 iterations)
     }
 }
 
-
 __attribute__((unused)) static void demo_thread_a(void)
 {
     for (u32 i = 0; i < 5; i++) {
@@ -165,7 +164,6 @@ static void fs_bringup(void)
                 }
             }
 
-            
             const char *pci_report = pci_get_report();
             usize pci_len = pci_get_report_len();
             if (pci_report && pci_len > 0) {
@@ -179,8 +177,6 @@ static void fs_bringup(void)
             }
         }
     }
-
-    
 
     struct inode *devices_dir = vfs_resolve("/devices");
     if (devices_dir && devices_dir->type == INODE_DIRECTORY) {
@@ -197,13 +193,6 @@ static void fs_bringup(void)
             }
         }
     }
-
-    
-
-
-
-
-
 
     const char *test_path = "/state/fs-selftest.txt";
     const char *test_content = "VulcanOS filesystem self-test: read-after-write verified.";
@@ -250,18 +239,9 @@ static void fs_bringup(void)
                  (u64)content_len);
 }
 
-
-
-
-
-
-
-
-
-
 static void libc_selftest(void)
 {
-    
+
     if (strlen("VulcanOS") != 8) {
         panic("libc_selftest: strlen mismatch");
     }
@@ -287,7 +267,6 @@ static void libc_selftest(void)
         }
     }
 
-    
     int *heap_int = malloc(sizeof(int));
     if (!heap_int) {
         panic("libc_selftest: malloc returned NULL");
@@ -304,8 +283,6 @@ static void libc_selftest(void)
     if (atoi("-56") != -56) {
         panic("libc_selftest: atoi negative-number mismatch");
     }
-
-    
 
     const char *path = "/state/libc-selftest.txt";
     const char *content = "libc self-test content";
@@ -340,16 +317,6 @@ static void libc_selftest(void)
     printf("libc printf() is alive: %d + %d = %d, string=\"%s\"\n", 2, 2, 4, "vulcan");
 }
 
-
-
-
-
-
-
-
-
-
-
 static void vpkg_selftest(void)
 {
     const struct embedded_package *pkg = embedded_package_find("hello-vulcan");
@@ -379,11 +346,6 @@ static void vpkg_selftest(void)
     if (rec.file_count != 2) {
         panic("vpkg_selftest: installed record has wrong file_count");
     }
-
-    
-
-
-
 
     int fd = open("/config/hello-vulcan.conf", VULCAN_O_READ);
     if (fd < 0) {
@@ -418,7 +380,7 @@ void kmain(u64 mb2_magic, u64 mb2_info_addr)
 
     framebuffer_init(mb2_info_addr);
     framebuffer_driver_register();
-    
+
     ramdisk_driver_register();
     driver_init_all();
     graphics_init();
@@ -436,11 +398,6 @@ void kmain(u64 mb2_magic, u64 mb2_info_addr)
 
     cpu_print_info();
 
-    
-
-
-
-
     pmm_init(mb2_info_addr);
     paging_init((paddr_t)(uptr)kernel_start, (paddr_t)(uptr)kernel_end);
     kheap_init();
@@ -451,11 +408,7 @@ void kmain(u64 mb2_magic, u64 mb2_info_addr)
     keyboard_init();
     printk_level(LOG_INFO, "PS/2 keyboard driver initialized\n");
 
-    
     ahci_driver_register();
-
-    
-
 
     pci_init();
 
@@ -466,16 +419,6 @@ void kmain(u64 mb2_magic, u64 mb2_info_addr)
 
     scheduler_init();
 
-    
-
-
-
-
-
-
-
-
-
     struct process *idle_proc = process_create("idle", idle_thread_entry);
     struct process *init_proc = process_create("init", init_thread_entry);
 
@@ -485,10 +428,6 @@ void kmain(u64 mb2_magic, u64 mb2_info_addr)
     printk("\n");
     printk_level(LOG_INFO, "bring-up complete. starting scheduler; init (pid=%llu) will start vulsh.\n\n",
                  init_proc->pid);
-
-    
-
-
 
     scheduler_start();
 }

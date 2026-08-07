@@ -1,20 +1,3 @@
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 #ifndef VULCAN_LIBC_STDIO_H
 #define VULCAN_LIBC_STDIO_H
 
@@ -35,38 +18,17 @@ int mkdir(const char *path);
 int rmdir(const char *path);
 int unlink(const char *path);
 
-
-
-
-
-
 #define VULCAN_O_READ    (1 << 0)
 #define VULCAN_O_WRITE   (1 << 1)
 #define VULCAN_O_CREATE  (1 << 2)
 
 int printf(const char *fmt, ...);
 
-
-
-
-
 struct vulcan_dirent {
     char name[64]; 
 
-
-
-
     int is_directory;
 };
-
-
-
-
-
-
-
-
-
 
 int vulcan_readdir(const char *path, unsigned long index, struct vulcan_dirent *out);
 

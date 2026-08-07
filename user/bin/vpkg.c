@@ -1,26 +1,3 @@
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 #include "stdio.h"
 #include "string.h"
 #include "pkg/vpkg.h"

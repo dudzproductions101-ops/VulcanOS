@@ -1,13 +1,3 @@
-
-
-
-
-
-
-
-
-
-
 #include "proc/scheduler.h"
 #include "proc/thread.h"
 #include "arch/x86_64/cpu.h"
@@ -43,17 +33,11 @@ void scheduler_enqueue(struct thread *t)
     t->state = THREAD_READY;
 
     if (!ready_queue) {
-        
 
         ready_queue = t;
         t->next = t;
         return;
     }
-
-    
-
-
-
 
     struct thread *tail = ready_queue;
     while (tail->next != ready_queue) {
@@ -62,12 +46,6 @@ void scheduler_enqueue(struct thread *t)
     tail->next = t;
     t->next = ready_queue;
 }
-
-
-
-
-
-
 
 static struct thread *dequeue_next(void)
 {
@@ -78,7 +56,7 @@ static struct thread *dequeue_next(void)
     struct thread *t = ready_queue;
 
     if (t->next == t) {
-        
+
         ready_queue = NULL;
     } else {
         struct thread *tail = t;
@@ -97,24 +75,11 @@ struct thread *scheduler_current(void)
     return current;
 }
 
-
-
-
-
-
-
-
-
-
 static void switch_to_next(struct thread *from)
 {
     struct thread *next = dequeue_next();
 
     if (!next) {
-        
-
-
-
 
         if (from && from->state == THREAD_READY) {
             current = from;
@@ -139,46 +104,10 @@ static void switch_to_next(struct thread *from)
     if (prev) {
         context_switch(&prev->context, &next->context);
     } else {
-        
-
-
 
         struct thread_context throwaway;
         context_switch(&throwaway, &next->context);
     }
-
-    
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
     sti();
 }
@@ -219,10 +148,6 @@ void scheduler_tick(void)
         if (prev->state == THREAD_RUNNING) {
             prev->state = THREAD_READY;
             scheduler_enqueue(prev);
-            
-
-
-
 
         }
         switch_to_next(prev);
@@ -248,11 +173,6 @@ void scheduler_reschedule(void)
     if (!scheduler_running || !current) {
         panic("scheduler_reschedule called before scheduler_start");
     }
-
-    
-
-
-
 
     switch_to_next(current);
 }
@@ -286,12 +206,6 @@ __attribute__((noreturn)) void scheduler_start(void)
 {
     scheduler_running = true;
     switch_to_next(NULL);
-
-    
-
-
-
-
 
     panic("scheduler_start: switch_to_next returned unexpectedly");
 }

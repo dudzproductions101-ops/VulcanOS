@@ -1,16 +1,3 @@
-
-
-
-
-
-
-
-
-
-
-
-
-
 #ifndef VULCAN_LIBC_STRING_H
 #define VULCAN_LIBC_STRING_H
 

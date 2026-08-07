@@ -1,5 +1,3 @@
-
-
 #ifndef VULCAN_DRIVERS_PCI_H
 #define VULCAN_DRIVERS_PCI_H
 

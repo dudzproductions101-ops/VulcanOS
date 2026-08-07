@@ -1,4 +1,3 @@
-
 #include "types.h"
 
 const u8 g_pkg_hello_vulcan[] = {

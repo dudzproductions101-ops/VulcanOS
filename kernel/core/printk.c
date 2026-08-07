@@ -1,20 +1,5 @@
-
-
-
-
-
-
-
-
-
-
-
 #include "printk.h"
 #include "drivers/console.h"
-
-
-
-
 
 typedef __builtin_va_list va_list;
 #define va_start(ap, last) __builtin_va_start(ap, last)
@@ -46,8 +31,6 @@ static void print_int(i64 value)
 {
     if (value < 0) {
         console_putc('-');
-        
-
 
         print_uint((u64)(-(value + 1)) + 1, 10, false);
     } else {
@@ -116,8 +99,6 @@ static void vprintk(const char *fmt, va_list ap)
             console_putc('%');
             break;
         default:
-            
-
 
             console_putc('%');
             console_putc(*p);

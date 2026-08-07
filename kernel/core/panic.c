@@ -1,14 +1,3 @@
-
-
-
-
-
-
-
-
-
-
-
 #include "panic.h"
 #include "printk.h"
 #include "arch/x86_64/cpu.h"
