@@ -1,23 +1,23 @@
-/*
- * vpk_manifest.c - manifest.vconf parser implementation
- *
- * See pkg/vpk_manifest.h for the format. This is a straightforward
- * line-oriented scanner: split on '\n', classify each line (blank,
- * "key: value", "[files]" section header, or "source -> dest"
- * within that section), and fill the manifest struct accordingly.
- * No general-purpose parsing machinery (no recursive descent, no
- * token stream) because the format itself has no nesting or
- * recursion to parse -- a scanner this simple is the CORRECT
- * complexity for this format, not a shortcut.
- */
+
+
+
+
+
+
+
+
+
+
+
+
 
 #include "pkg/vpk_manifest.h"
 
 static void copy_trimmed(char *dest, usize dest_size, const char *start, const char *end)
 {
-    /* Trim leading/trailing whitespace from [start, end) before
-     * copying -- manifest authors shouldn't have to be careful about
-     * exact spacing around ':' or '->'. */
+    
+
+
     while (start < end && (*start == ' ' || *start == '\t')) {
         start++;
     }
@@ -100,8 +100,8 @@ bool vpk_manifest_parse(const char *text, usize len, struct vpk_manifest *out)
             printk("vpk_manifest_parse: line #%u, len=%llu, in_files_section=%d\n",
                    line_iterations, (u64)line_len, (int)in_files_section);
 
-            /* Skip a blank line (including a lone '\r' from CRLF
-             * line endings) without changing section state. */
+            
+
             const char *content_start = line_start;
             while (content_start < line_end && (*content_start == ' ' || *content_start == '\t')) {
                 content_start++;
@@ -149,12 +149,12 @@ bool vpk_manifest_parse(const char *text, usize len, struct vpk_manifest *out)
                     } else if (starts_with(key, "description")) {
                         copy_trimmed(out->description, sizeof(out->description), colon + 1, line_end);
                     } else if (starts_with(key, "depends")) {
-                        /* Comma-separated dependency names on one
-                         * line -- simple enough for this bring-up
-                         * milestone's needs (nothing enforces
-                         * dependencies yet, see the header's design
-                         * note) without needing a multi-line list
-                         * syntax. */
+                        
+
+
+
+
+
                         const char *dep_start = colon + 1;
                         while (dep_start < line_end && (*dep_start == ' ' || *dep_start == '\t')) {
                             dep_start++;
@@ -173,12 +173,12 @@ bool vpk_manifest_parse(const char *text, usize len, struct vpk_manifest *out)
                             dep_start = (comma < line_end) ? comma + 1 : line_end;
                         }
                     }
-                    /* Unrecognized keys are silently ignored rather
-                     * than rejected -- a forward-compatible design
-                     * choice: a manifest written for a future vpkg
-                     * version with new fields should still install
-                     * correctly on this version, just without acting
-                     * on fields it doesn't understand yet. */
+                    
+
+
+
+
+
                 }
             }
 

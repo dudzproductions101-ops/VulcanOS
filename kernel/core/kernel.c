@@ -42,24 +42,9 @@ static void print_banner(void)
     printk("a Unix-like operating system, built from scratch.\n\n");
 }
 
-/* Provided by linker.ld; the kernel's own physical footprint, used
- * by paging_init to build the higher-half mapping and by pmm_init
- * (via pmm.c's own extern) to reserve those frames. */
 extern u8 kernel_start[];
 extern u8 kernel_end[];
 
-/* A crude busy-wait, NOT a real sleep primitive -- VulcanOS has no
- * timer-based blocking/wake mechanism yet (that needs the scheduler
- * to support THREAD_BLOCKED with a wake condition, which is real
- * future work, not implemented by this bring-up milestone). This
- * exists only so the two demo threads below print at a human-
- * readable pace instead of flooding the console faster than a
- * screenshot could ever capture, so the round-robin rotation is
- * actually visible rather than just theoretically true. Busy-
- * waiting like this wastes the entire time slice spinning -- a real
- * blocking sleep would instead call scheduler_reschedule() and let
- * other threads run during the wait, which is exactly what a future
- * sleep() implementation should do instead of this. */
 static void crude_busy_wait(u64 iterations)
 {
     for (volatile u64 i = 0; i < iterations; i++) {
@@ -67,19 +52,7 @@ static void crude_busy_wait(u64 iterations)
     }
 }
 
-/* Demo thread A: proves round-robin actually rotates between two
- * independently-created threads, not just "the scheduler runs one
- * thread forever." Deliberately simple -- printing a counter is
- * enough to make interleaving visible on screen; it is not meant to
- * demonstrate anything beyond "two threads genuinely alternate." */
-/* __attribute__((unused)): kept as real, working, documented
- * scheduler-verification code (see PROJECT_STATUS.md's "Scheduler
- * bring-up" section for what these two functions proved and how)
- * even though init_thread_entry/vulsh are what actually boots by
- * default now -- see kmain's own comment at its process_create
- * calls. Without this attribute, GCC's -Wunused-function would flag
- * these as dead code, which they are not: they're intentionally-
- * not-currently-enqueued verification code, not a mistake. */
+
 __attribute__((unused)) static void demo_thread_a(void)
 {
     for (u32 i = 0; i < 5; i++) {
@@ -98,10 +71,6 @@ __attribute__((unused)) static void demo_thread_b(void)
     printk_level(LOG_INFO, "demo-thread-b: finished, exiting\n");
 }
 
-/* The idle thread: what runs when nothing else is ready. Every
- * scheduler needs one -- switch_to_next (scheduler.c) would panic
- * with "system deadlocked" the moment every other thread finishes
- * or blocks if there were nothing left to hand the CPU to. */
 static void idle_thread_entry(void)
 {
     for (;;) {
@@ -109,13 +78,6 @@ static void idle_thread_entry(void)
     }
 }
 
-/* Brings up the filesystem: initializes the VFS, creates a vulcanfs
- * instance, mounts it at "/", and builds VulcanOS's real top-level
- * hierarchy (see docs/FILESYSTEM_HIERARCHY.md for the design
- * rationale behind each name). Kept as its own function rather than
- * inlined into kmain, matching the style of the other bring-up
- * steps -- each subsystem's initialization is one clearly-named
- * call, not a wall of inline logic. */
 static usize append_u32_decimal(char *buf, usize offset, u32 value)
 {
     char temp[16];
@@ -203,7 +165,7 @@ static void fs_bringup(void)
                 }
             }
 
-            /* Write PCI device report if available */
+            
             const char *pci_report = pci_get_report();
             usize pci_len = pci_get_report_len();
             if (pci_report && pci_len > 0) {
@@ -218,8 +180,8 @@ static void fs_bringup(void)
         }
     }
 
-    /* Create device nodes for all block devices registered before
-     * filesystem bring-up (ramdisk, AHCI, etc.). */
+    
+
     struct inode *devices_dir = vfs_resolve("/devices");
     if (devices_dir && devices_dir->type == INODE_DIRECTORY) {
         usize device_count = block_device_count();
@@ -236,13 +198,13 @@ static void fs_bringup(void)
         }
     }
 
-    /* Verification, not just "no crash": create a real file, write
-     * real content, close it, reopen it fresh, read it back, and
-     * compare byte-for-byte. This is the same standard every other
-     * subsystem in this bring-up was held to (mm's pmm/paging
-     * numbers were checked against real Multiboot2 data; the
-     * scheduler's rotation was checked against real interleaved
-     * output) -- filesystem correctness gets the same discipline. */
+    
+
+
+
+
+
+
     const char *test_path = "/state/fs-selftest.txt";
     const char *test_content = "VulcanOS filesystem self-test: read-after-write verified.";
     usize content_len = 0;
@@ -288,18 +250,18 @@ static void fs_bringup(void)
                  (u64)content_len);
 }
 
-/* Verifies libc's own functions work correctly, end to end -- not
- * just that they link. Deliberately exercises libc's PUBLIC API
- * (string.h/stdlib.h/stdio.h's open/read/write, not vfs_* directly)
- * so this test actually proves libc's wrapper layer is correct, on
- * top of what fs_bringup already proved about the VFS itself. Must
- * run AFTER fs_bringup, since it writes to /state, which fs_bringup
- * is what actually creates. Same standard every prior subsystem was
- * held to: real assertions against real computed values, panicking
- * on any mismatch, not "ran without crashing." */
+
+
+
+
+
+
+
+
+
 static void libc_selftest(void)
 {
-    /* string.c: strlen, strcmp, strcpy, memmove overlap */
+    
     if (strlen("VulcanOS") != 8) {
         panic("libc_selftest: strlen mismatch");
     }
@@ -317,7 +279,7 @@ static void libc_selftest(void)
     }
 
     char overlap[10] = {0,1,2,3,4,5,6,7,8,9};
-    memmove(overlap + 4, overlap + 2, 5); /* dest > src, overlapping */
+    memmove(overlap + 4, overlap + 2, 5); 
     static const char expected_overlap[5] = {2,3,4,5,6};
     for (int i = 0; i < 5; i++) {
         if (overlap[4 + i] != expected_overlap[i]) {
@@ -325,7 +287,7 @@ static void libc_selftest(void)
         }
     }
 
-    /* stdlib.c: malloc/free, atoi */
+    
     int *heap_int = malloc(sizeof(int));
     if (!heap_int) {
         panic("libc_selftest: malloc returned NULL");
@@ -343,8 +305,8 @@ static void libc_selftest(void)
         panic("libc_selftest: atoi negative-number mismatch");
     }
 
-    /* stdio.c: open/write/close/open/read/close through libc's OWN
-     * wrapper functions (not vfs_* directly), plus printf itself. */
+    
+
     const char *path = "/state/libc-selftest.txt";
     const char *content = "libc self-test content";
     usize content_len = strlen(content);
@@ -378,16 +340,16 @@ static void libc_selftest(void)
     printf("libc printf() is alive: %d + %d = %d, string=\"%s\"\n", 2, 2, 4, "vulcan");
 }
 
-/* Verifies vpkg end to end: installs the real embedded hello-vulcan
- * package (built by tools/vpkbuild.py from tools/packages/
- * hello-vulcan/, embedded via tools/bin2c.py -- see
- * pkg/embedded_packages.h for the full workflow), then checks EVERY
- * layer actually worked: the database record exists with the right
- * fields, AND the actual installed files exist at their real
- * destinations with the exact content the source package shipped.
- * Checking only the database record would leave real installation
- * bugs (e.g. a manifest parsed correctly but a file copy silently
- * failing) undetected -- this test deliberately checks both. */
+
+
+
+
+
+
+
+
+
+
 static void vpkg_selftest(void)
 {
     const struct embedded_package *pkg = embedded_package_find("hello-vulcan");
@@ -418,11 +380,11 @@ static void vpkg_selftest(void)
         panic("vpkg_selftest: installed record has wrong file_count");
     }
 
-    /* Verify the ACTUAL installed file, not just the database
-     * record -- open it fresh through libc's own open()/read(),
-     * exactly like a real user's `cat` would, and check its content
-     * matches what tools/packages/hello-vulcan/config/hello.conf
-     * actually contains. */
+    
+
+
+
+
     int fd = open("/config/hello-vulcan.conf", VULCAN_O_READ);
     if (fd < 0) {
         panic("vpkg_selftest: installed file /config/hello-vulcan.conf not found");
@@ -456,7 +418,7 @@ void kmain(u64 mb2_magic, u64 mb2_info_addr)
 
     framebuffer_init(mb2_info_addr);
     framebuffer_driver_register();
-    /* register storage early so fs_bringup can see block devices */
+    
     ramdisk_driver_register();
     driver_init_all();
     graphics_init();
@@ -474,11 +436,11 @@ void kmain(u64 mb2_magic, u64 mb2_info_addr)
 
     cpu_print_info();
 
-    /* mm bring-up, strictly in dependency order: pmm hands out raw
-     * physical frames; paging needs pmm to allocate page-table
-     * levels and then takes over from boot.asm's temporary identity
-     * map; kheap needs paging to back its virtual address range
-     * with real physical memory as it grows. */
+    
+
+
+
+
     pmm_init(mb2_info_addr);
     paging_init((paddr_t)(uptr)kernel_start, (paddr_t)(uptr)kernel_end);
     kheap_init();
@@ -489,12 +451,12 @@ void kmain(u64 mb2_magic, u64 mb2_info_addr)
     keyboard_init();
     printk_level(LOG_INFO, "PS/2 keyboard driver initialized\n");
 
-    /* Register important PCI drivers that should bind during PCI scan */
+    
     ahci_driver_register();
 
-    /* Discover PCI devices early so drivers can be bound; the
-     * textual report will be written into the filesystem by
-     * fs_bringup() after the VFS is mounted. */
+    
+
+
     pci_init();
 
     fs_bringup();
@@ -504,16 +466,16 @@ void kmain(u64 mb2_magic, u64 mb2_info_addr)
 
     scheduler_init();
 
-    /* init_thread_entry (user/init/init.c) is VulcanOS's real
-     * userland entry point: it starts vulsh, which is where an
-     * interactive user actually lands. demo_thread_a/demo_thread_b
-     * (defined earlier in this file) remain available, tested,
-     * documented scheduler-verification code -- see
-     * PROJECT_STATUS.md's scheduler bring-up writeup for what they
-     * proved and how -- but are no longer enqueued by default, since
-     * their job (proving round-robin preemption genuinely works,
-     * not just appears to) is done and their proof is preserved in
-     * that writeup rather than needing to re-run on every boot. */
+    
+
+
+
+
+
+
+
+
+
     struct process *idle_proc = process_create("idle", idle_thread_entry);
     struct process *init_proc = process_create("init", init_thread_entry);
 
@@ -524,9 +486,9 @@ void kmain(u64 mb2_magic, u64 mb2_info_addr)
     printk_level(LOG_INFO, "bring-up complete. starting scheduler; init (pid=%llu) will start vulsh.\n\n",
                  init_proc->pid);
 
-    /* Never returns: from this point on, "the kernel's execution"
-     * IS whichever thread the scheduler has chosen, forever. The
-     * function that got us here (kmain) has no more meaning as a
-     * call stack VulcanOS will ever unwind back through. */
+    
+
+
+
     scheduler_start();
 }

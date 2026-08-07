@@ -1,6 +1,6 @@
-/*
- * multiboot2.c - Multiboot2 tag list walker
- */
+
+
+
 
 #include "multiboot2.h"
 
@@ -21,8 +21,8 @@ void mb2_walk_tags(u64 mb2_info_addr, mb2_tag_visitor_t visit, void *ctx)
             return;
         }
 
-        /* Tags are 8-byte aligned; size does not itself include
-         * this padding, so round up before advancing. */
+        
+
         u32 advance = (tag->size + 7) & ~(u32)7;
         ptr += advance;
     }

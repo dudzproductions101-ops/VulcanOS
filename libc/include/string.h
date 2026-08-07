@@ -1,15 +1,15 @@
-/*
- * string.h - VulcanOS libc string/memory functions
- *
- * VulcanOS's own implementation (libc/string.c), not copied from
- * any existing libc's source. The function names/signatures below
- * follow the C standard -- strlen, memcpy, etc. are names any C
- * programmer already knows, not something to rename for the sake of
- * being different. What's original to VulcanOS is the
- * implementation and everything around it (see stdio.h's file
- * comment for the interim direct-kernel-call design note that
- * applies to this whole libc).
- */
+
+
+
+
+
+
+
+
+
+
+
+
 
 #ifndef VULCAN_LIBC_STRING_H
 #define VULCAN_LIBC_STRING_H
@@ -32,4 +32,4 @@ void *memmove(void *dest, const void *src, usize n);
 void *memset(void *dest, int value, usize n);
 int memcmp(const void *a, const void *b, usize n);
 
-#endif /* VULCAN_LIBC_STRING_H */
+#endif 

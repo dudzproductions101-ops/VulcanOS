@@ -1,20 +1,20 @@
-/*
- * vulsh.c - VulcanOS's shell
- *
- * Reads a line, tokenizes it, and dispatches to a built-in command.
- * DISPATCH MECHANISM NOTE: VulcanOS has no exec()-from-disk yet (no
- * ring-3 execution -- see the interim-design note in
- * libc/stdlib.c), so vulsh dispatches by calling the linked-in
- * utility functions (ls_main, cat_main, echo_main) directly as
- * ordinary C function calls, not by forking and executing separate
- * binaries. This is an honest reflection of the current
- * architecture: vulsh, ls, cat, and echo are all compiled into the
- * same kernel image and this function call IS the real dispatch
- * mechanism right now, not a placeholder for a "real" one. When
- * VulcanOS gains fork/exec, this dispatch table becomes the natural
- * place to instead build an argv[0] -> on-disk-path lookup and
- * fork+exec each command as a genuinely separate process.
- */
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 #include "shell.h"
 #include "stdio.h"
@@ -24,9 +24,9 @@
 #define VULSH_LINE_MAX 256
 #define VULSH_MAX_ARGS 16
 
-/* Forward declarations for the linked-in utilities' real entry
- * points -- see this file's top comment for why a direct call is
- * the honest current dispatch mechanism. */
+
+
+
 extern int ls_main(int argc, char **argv);
 extern int cat_main(int argc, char **argv);
 extern int echo_main(int argc, char **argv);
@@ -37,13 +37,13 @@ static void print_prompt(void)
     printf("vulsh> ");
 }
 
-/* Reads one line from stdin into `buf` (NUL-terminated, trailing
- * newline stripped), handling backspace ('\b') so line editing
- * actually works, not just raw character accumulation. Polls
- * read() (see stdio.c's read() design note on why stdin is
- * currently non-blocking) and yields between polls so an idle shell
- * waiting for a keypress doesn't burn its entire time slice
- * busy-spinning and starve other threads. */
+
+
+
+
+
+
+
 static void read_line(char *buf, usize max_len)
 {
     usize len = 0;
@@ -62,34 +62,34 @@ static void read_line(char *buf, usize max_len)
             break;
         }
 
-        if (c == '\b' || c == 127) { /* backspace or DEL */
+        if (c == '\b' || c == 127) { 
             if (len > 0) {
                 len--;
-                printf("\b \b"); /* move back, erase, move back again --
-                                   * the standard terminal trick for
-                                   * visually erasing the last character */
+                printf("\b \b"); 
+
+
             }
             continue;
         }
 
         if (len < max_len - 1) {
             buf[len++] = c;
-            printf("%c", c); /* local echo -- VulcanOS's console driver
-                               * doesn't echo keystrokes on its own, so
-                               * the shell must do it explicitly for
-                               * typed input to be visible at all */
+            printf("%c", c); 
+
+
+
         }
     }
 
     buf[len] = '\0';
 }
 
-/* Splits `line` into whitespace-separated tokens, in place (writes
- * NUL bytes into `line` itself at each boundary, matching the
- * standard strtok-style approach) and fills `argv` with pointers
- * into it. Returns the resulting argc. Handles multiple consecutive
- * spaces correctly (does not produce empty-string tokens between
- * them). */
+
+
+
+
+
+
 static int tokenize(char *line, char **argv, int max_args)
 {
     int argc = 0;
@@ -120,7 +120,7 @@ static int tokenize(char *line, char **argv, int max_args)
 static int dispatch(int argc, char **argv)
 {
     if (argc == 0) {
-        return 0; /* empty line, nothing to do */
+        return 0; 
     }
 
     if (strcmp(argv[0], "exit") == 0) {
@@ -173,7 +173,7 @@ int vulsh_main(int argc, char **argv)
         dispatch(line_argc, args);
     }
 
-    return 0; /* unreachable under normal operation (the loop above
-               * never breaks except via exit()'s own noreturn path),
-               * but kept for a well-formed function signature */
+    return 0; 
+
+
 }

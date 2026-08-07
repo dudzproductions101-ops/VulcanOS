@@ -1,25 +1,25 @@
-/*
- * vpkg.c - VulcanOS's package manager CLI
- *
- * Thin command-line wrapper around the real vpkg logic in
- * kernel/pkg/vpkg.c -- this file owns argument parsing and output
- * formatting; kernel/pkg/vpkg.c owns archive parsing, manifest
- * parsing, and actual installation. Included directly from
- * kernel/pkg/ headers (not through libc) because vpkg's real
- * functionality is a legitimate system-level concern, not a
- * general-purpose I/O primitive every program needs -- the same
- * reasoning already applied to init.c's direct use of
- * proc/scheduler.h.
- *
- * Usage (from vulsh):
- *   vpkg install <name>     install an embedded package by name
- *   vpkg list                list installed packages
- *   vpkg available            list packages available to install
- *   vpkg remove <name>       remove a package's database record
- *                             (see vpkg_remove's own documented
- *                             file-deletion limitation in
- *                             kernel/include/pkg/vpkg.h)
- */
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 #include "stdio.h"
 #include "string.h"

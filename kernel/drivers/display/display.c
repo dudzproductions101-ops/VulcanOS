@@ -1,10 +1,10 @@
-/*
- * display.c - Display driver abstraction
- *
- * Provides a generic display API on top of a registered display driver.
- * Currently the only concrete driver is the framebuffer driver, but
- * this abstraction makes it easy to add additional display backends later.
- */
+
+
+
+
+
+
+
 
 #include "drivers/display.h"
 #include "drivers/driver.h"

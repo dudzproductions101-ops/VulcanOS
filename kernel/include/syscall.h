@@ -1,4 +1,4 @@
-/* syscall.h - basic kernel syscall numbers and prototypes */
+
 
 #ifndef VULCAN_SYSCALL_H
 #define VULCAN_SYSCALL_H
@@ -12,4 +12,4 @@
 
 void syscall_handle(struct interrupt_frame *frame);
 
-#endif /* VULCAN_SYSCALL_H */
+#endif 

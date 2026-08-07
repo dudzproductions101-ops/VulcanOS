@@ -3,11 +3,11 @@
 #include "proc/process.h"
 #include "printk.h"
 
-/* Very small syscall dispatcher for initial bring-up. Syscall
- * arguments follow the AMD64 syscall convention: number in rax,
- * args in rdi, rsi, rdx, r10, r8, r9. The interrupt stub populates
- * a struct interrupt_frame so we can read/write rax/rdi/ rsi etc.
- */
+
+
+
+
+
 
 void syscall_handle(struct interrupt_frame *frame)
 {
@@ -25,9 +25,9 @@ void syscall_handle(struct interrupt_frame *frame)
         u64 fd = frame->rdi;
         const char *buf = (const char *)frame->rsi;
         u64 len = frame->rdx;
-        /* For now, don't attempt to copy from user memory (no user
-         * mode yet). Just log the syscall for testing and return
-         * the requested length as if the write succeeded. */
+        
+
+
         printk_level(LOG_INFO, "syscall: write fd=%llu len=%llu buf=%p\n", fd, len, buf);
         ret = len;
         break;

@@ -1,10 +1,10 @@
-/* pci.c - simple PCI bus scanner using config space I/O */
+
 
 #include "drivers/pci.h"
 #include "arch/x86_64/cpu.h"
 #include "mm/allocator.h"
 #include "printk.h"
-/* Avoid using libc snprintf from kernel; implement tiny append helpers */
+
 
 static inline usize append_str(char *buf, usize buf_size, usize off, const char *s)
 {
@@ -17,7 +17,7 @@ static inline usize append_str(char *buf, usize buf_size, usize off, const char 
 static inline usize append_hex_u8(char *buf, usize buf_size, usize off, u8 v)
 {
     const char *hex = "0123456789abcdef";
-    if (off + 2 + 1 >= buf_size) return off; /* 2 digits + possible null */
+    if (off + 2 + 1 >= buf_size) return off; 
     buf[off++] = hex[(v >> 4) & 0xF];
     buf[off++] = hex[v & 0xF];
     return off;
@@ -37,7 +37,7 @@ static inline usize append_hex_u16(char *buf, usize buf_size, usize off, u16 v)
 static char *report_buf = NULL;
 static usize report_len = 0;
 
-/* Registered PCI drivers */
+
 #define MAX_PCI_DRIVERS 16
 static const struct pci_driver *registered_pci_drivers[MAX_PCI_DRIVERS];
 static usize registered_pci_driver_count = 0;
@@ -71,7 +71,7 @@ u32 pci_config_read32(u8 bus, u8 dev, u8 func, u8 offset)
 
 void pci_init(void)
 {
-    /* allocate a modest report buffer */
+    
     const usize buf_size = 16384;
     report_buf = kmalloc(buf_size);
     if (!report_buf) {
@@ -85,7 +85,7 @@ void pci_init(void)
                 u32 val = pci_config_read32(bus, dev, func, 0x00);
                 u16 vendor = (u16)(val & 0xFFFF);
                 if (vendor == 0xFFFF) {
-                    if (func == 0) break; /* no functions on this device */
+                    if (func == 0) break; 
                     continue;
                 }
                 u16 device = (u16)((val >> 16) & 0xFFFF);
@@ -95,15 +95,15 @@ void pci_init(void)
                 u8 subclass = (class_reg >> 16) & 0xFF;
                 u8 class_code = (class_reg >> 24) & 0xFF;
 
-                /* Format: pci bb:dd.f vendor=0xvvvv device=0xdddd class=0xCC subclass=0xSS progif=0xPP\n */
+                
                 off = append_str(report_buf, buf_size, off, "pci ");
-                /* bus */
+                
                 off = append_hex_u8(report_buf, buf_size, off, bus);
                 off = append_str(report_buf, buf_size, off, ":");
-                /* dev */
+                
                 off = append_hex_u8(report_buf, buf_size, off, dev);
                 off = append_str(report_buf, buf_size, off, ".");
-                /* func as decimal single digit */
+                
                 if (off + 2 < buf_size) {
                     report_buf[off++] = '0' + (func % 10);
                 }
@@ -119,11 +119,11 @@ void pci_init(void)
                 off = append_hex_u8(report_buf, buf_size, off, prog_if);
                 if (off + 1 < buf_size) report_buf[off++] = '\n';
                 if (off + 128 >= buf_size) {
-                    /* stop if buffer nearly full */
+                    
                     report_len = off;
                 }
 
-                /* Attempt to bind any registered PCI driver that matches */
+                
                 for (usize di = 0; di < registered_pci_driver_count; di++) {
                     const struct pci_driver *pd = registered_pci_drivers[di];
                     bool match = true;

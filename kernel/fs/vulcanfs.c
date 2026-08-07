@@ -1,13 +1,13 @@
-/*
- * vulcanfs.c - VulcanOS's RAM-resident filesystem backend
- *
- * See fs/vulcanfs.h for the design rationale. This file implements
- * every operation in struct inode_ops (inode.h) against a simple
- * in-memory tree: each vulcanfs_node holds either a growable data
- * buffer (files) or a child-node list (directories), and every
- * struct inode's private_data points at the corresponding
- * vulcanfs_node -- the VFS layer never sees this type directly.
- */
+
+
+
+
+
+
+
+
+
+
 
 #include "fs/vulcanfs.h"
 #include "fs/vfs.h"
@@ -21,22 +21,22 @@
 #define VULCANFS_INITIAL_CAPACITY 256
 
 struct vulcanfs_node {
-    struct inode *node;             /* the generic inode this backs */
+    struct inode *node;             
 
-    /* File data. NULL/0 for directories. */
+    
     u8 *data;
     usize data_capacity;
 
-    /* Device metadata, only meaningful when node->type == INODE_DEVICE. */
+    
     enum vulcanfs_device_kind device_kind;
     char device_name[VULCAN_FILENAME_MAX];
 
-    /* Directory children. NULL/0 for files. Kept as a flat array
-     * rather than a linked list -- VULCANFS_MAX_CHILDREN is small
-     * enough that array scan cost is irrelevant, and a flat array
-     * makes readdir's index-based iteration (inode_ops.readdir's
-     * contract in inode.h) trivial rather than requiring a list
-     * walk to find the Nth entry every time. */
+    
+
+
+
+
+
     struct vulcanfs_node *children[VULCANFS_MAX_CHILDREN];
     char child_names[VULCANFS_MAX_CHILDREN][VULCAN_FILENAME_MAX];
     int child_count;
@@ -65,10 +65,10 @@ static bool names_equal(const char *a, const char *b)
     return *a == *b;
 }
 
-static const struct inode_ops vulcanfs_ops;  /* forward declaration; defined
-                                               * at the bottom of this file,
-                                               * after every function it
-                                               * references exists */
+static const struct inode_ops vulcanfs_ops;  
+
+
+
 
 static struct inode *vulcanfs_new_inode(enum inode_type type)
 {
@@ -84,11 +84,11 @@ static struct inode *vulcanfs_new_inode(enum inode_type type)
     node->type = type;
     node->permissions = VULCAN_PERM_READ | VULCAN_PERM_WRITE;
     if (type == INODE_DIRECTORY) {
-        node->permissions |= VULCAN_PERM_EXEC; /* "searchable", matching
-                                                 * the standard Unix
-                                                 * convention that a
-                                                 * directory's execute bit
-                                                 * means "can be traversed" */
+        node->permissions |= VULCAN_PERM_EXEC; 
+
+
+
+
     }
     node->size = 0;
     node->ops = &vulcanfs_ops;
@@ -152,8 +152,8 @@ static isize vulcanfs_device_read(struct inode *node, void *buf, usize size, usi
             return result;
         }
 
-        /* Fall back to a device report if the block device registry
-         * doesn't know this device name. */
+        
+
         u64 size_bytes = 0;
         u32 pref = 0;
         if (block_device_get_report(priv->device_name, &size_bytes, &pref)) {
@@ -228,7 +228,7 @@ static isize vulcanfs_read(struct inode *node, void *buf, usize size, usize offs
         return VULCAN_FS_ERR_IS_DIR;
     }
     if (offset >= node->size) {
-        return 0; /* end of file */
+        return 0; 
     }
 
     usize available = node->size - offset;
@@ -331,7 +331,7 @@ static struct inode *vulcanfs_create_child(struct inode *dir, const char *name, 
         return NULL;
     }
     if (vulcanfs_lookup(dir, name)) {
-        return NULL; /* already exists */
+        return NULL; 
     }
 
     struct inode *child = vulcanfs_new_inode(type);
@@ -360,7 +360,7 @@ struct inode *vulcanfs_create_device(struct inode *dir, const char *name,
         return NULL;
     }
     if (vulcanfs_lookup(dir, name)) {
-        return NULL; /* already exists */
+        return NULL; 
     }
 
     struct inode *child = vulcanfs_new_inode(INODE_DEVICE);
@@ -370,7 +370,7 @@ struct inode *vulcanfs_create_device(struct inode *dir, const char *name,
 
     struct vulcanfs_node *child_priv = child->private_data;
     child_priv->device_kind = kind;
-    /* store device name for later lookups */
+    
     int ni = 0;
     for (; ni < VULCAN_FILENAME_MAX - 1 && name[ni]; ni++) child_priv->device_name[ni] = name[ni];
     child_priv->device_name[ni] = '\0';
@@ -398,13 +398,13 @@ static bool vulcanfs_unlink_child(struct inode *dir, const char *name)
         struct vulcanfs_node *target = priv->children[i];
 
         if (target->node->type == INODE_DIRECTORY && target->child_count > 0) {
-            return false; /* refuse to remove a non-empty directory --
-                            * see inode_ops.unlink's contract in inode.h */
+            return false; 
+
         }
 
-        /* Shift remaining entries down, closing the gap. With at
-         * most VULCANFS_MAX_CHILDREN (32) entries, this is cheap
-         * enough to not need anything fancier. */
+        
+
+
         for (int j = i; j < priv->child_count - 1; j++) {
             priv->children[j] = priv->children[j + 1];
             copy_name(priv->child_names[j], priv->child_names[j + 1]);

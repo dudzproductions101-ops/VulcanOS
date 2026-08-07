@@ -1,13 +1,13 @@
-/*
- * framebuffer.h - Basic Multiboot2 framebuffer support
- *
- * Provides a minimal framebuffer abstraction for the boot path:
- * - detect a GRUB-provided linear framebuffer via the Multiboot2
- *   framebuffer tag
- * - expose a simple pixel API for software rendering
- * - support 24/32-bit RGB framebuffers for an early graphical
- *   boot/demo path without requiring a full GPU driver stack.
- */
+
+
+
+
+
+
+
+
+
+
 
 #ifndef VULCAN_DRIVERS_FRAMEBUFFER_H
 #define VULCAN_DRIVERS_FRAMEBUFFER_H
@@ -41,4 +41,4 @@ void framebuffer_draw_gradient(void);
 
 #define FRAMEBUFFER_RGB(r, g, b) ((((u32)(r) & 0xFF) << 16) | (((u32)(g) & 0xFF) << 8) | ((u32)(b) & 0xFF))
 
-#endif /* VULCAN_DRIVERS_FRAMEBUFFER_H */
+#endif 

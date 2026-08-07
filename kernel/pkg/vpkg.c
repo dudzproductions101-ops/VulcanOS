@@ -1,21 +1,21 @@
-/*
- * vpkg.c - VulcanOS package manager implementation
- *
- * See pkg/vpkg.h for the full design/scope notes.
- *
- * The package database is kept in memory (a fixed-size array) AND
- * mirrored to /state/packages.db on every change, in a simple
- * line-oriented text format ("name|version|description|file_count"
- * per line). The in-memory copy is what vpkg_list/vpkg_install
- * actually read from during a session -- the on-disk mirror exists
- * so `cat /state/packages.db` is a real, honest way to inspect
- * installed packages directly, matching the Unix philosophy of
- * keeping system state in plain, readable files. Since vulcanfs is
- * RAM-resident (see fs/vulcanfs.h), neither copy survives a real
- * reboot yet -- that's a property of the filesystem backing it, not
- * a limitation of vpkg's own design; a persistent vulcanfs mode
- * would make this database durable with no changes needed here.
- */
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 #include "pkg/vpkg.h"
 #include "pkg/vpk_archive.h"
@@ -39,10 +39,10 @@ static bool names_equal(const char *a, const char *b)
     return *a == *b;
 }
 
-/* Bounded string copy, NUL-terminating exactly once at the end --
- * matching the same copy_name pattern already established in
- * fs/vulcanfs.c and proc/process.c, kept consistent here rather
- * than reinvented per-file. */
+
+
+
+
 static void copy_bounded(char *dest, usize dest_size, const char *src)
 {
     usize i = 0;
@@ -75,12 +75,12 @@ static void append_u32(char *buf, usize buf_size, usize *pos, u32 value)
     }
 }
 
-/* Rewrites /state/packages.db from the current in-memory table.
- * Simple full-rewrite-on-every-change rather than incremental
- * append/edit -- the database is small (VPKG_MAX_INSTALLED, 32
- * entries) and this keeps the on-disk mirror trivially correct by
- * construction, with no risk of it drifting out of sync with the
- * in-memory copy through a missed incremental update somewhere. */
+
+
+
+
+
+
 static void persist_db(void)
 {
     char buf[4096];
@@ -97,10 +97,10 @@ static void persist_db(void)
         append_str(buf, sizeof(buf), &pos, "\n");
     }
 
-    vfs_unlink(VPKG_DB_PATH); /* fine if this fails (e.g. first-ever
-                                * install, nothing to unlink yet) --
-                                * the create+open below is what
-                                * actually matters */
+    vfs_unlink(VPKG_DB_PATH); 
+
+
+
     vfs_create(VPKG_DB_PATH, INODE_FILE);
     vulcan_fd_t fd = vfs_open(VPKG_DB_PATH);
     if (fd != VULCAN_FD_INVALID) {
@@ -112,10 +112,10 @@ static void persist_db(void)
 void vpkg_init(void)
 {
     installed_count = 0;
-    /* No load-from-disk on init: vulcanfs is RAM-resident (see this
-     * file's top comment), so /state/packages.db never has prior
-     * content to load at boot -- persist_db exists for inspectability
-     * DURING a session, not for surviving a reboot yet. */
+    
+
+
+
     printk_level(LOG_INFO, "vpkg: initialized (db at %s)\n", VPKG_DB_PATH);
 }
 
@@ -130,36 +130,36 @@ static bool find_installed_index(const char *name, u32 *out_index)
     return false;
 }
 
-/* Real mkdir-p equivalent: walks `path` component by component and
- * creates every intermediate directory that doesn't already exist,
- * stopping before the final component (which the caller creates
- * itself, as a file, not a directory). This is a real, necessary
- * fix, not a nice-to-have: fs_bringup only creates VulcanOS's nine
- * TOP-LEVEL directories (see kmain's toplevel_dirs array); a
- * package's manifest routinely installs into a package-specific
- * subdirectory (e.g. /packages/hello-vulcan/) that has never
- * existed before this exact install -- confirmed as a real bug
- * during vpkg bring-up: hello-vulcan's own install failed with
- * "failed to install share/hello.txt -> /packages/hello-vulcan/
- * hello.txt" because /packages/hello-vulcan/ itself didn't exist,
- * and vfs_create deliberately does NOT create intermediate
- * directories on its own (see vfs_create's own contract in
- * fs/vfs.h) -- that's vpkg's job as a caller with a genuine need
- * for it, not something the general-purpose VFS primitive should
- * assume every caller wants.
- *
- * BUG HISTORY, kept here rather than deleted once fixed: the first
- * version of this function built `full_path` from ONLY the current
- * path segment on each iteration (e.g. "/hello-vulcan" in
- * isolation), not the accumulated path so far ("/packages/
- * hello-vulcan") -- so it tried to create a bare top-level
- * "/hello-vulcan" instead of properly nesting under "/packages".
- * Confirmed via a real boot-log failure, then re-diagnosed by
- * simulating this exact function's logic in Python against the
- * real failing manifest path before touching the C a second time --
- * catching the accumulation bug precisely rather than guessing at
- * another fix. The corrected version below accumulates `full_path`
- * across the whole walk instead of resetting it per-segment. */
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 static void ensure_parent_dirs_exist(const char *path)
 {
     static u32 call_count = 0;
@@ -184,20 +184,20 @@ static void ensure_parent_dirs_exist(const char *path)
         if (*p == '/' || *p == '\0') {
             if (comp_len == 0) {
                 if (*p == '\0') {
-                    break; /* trailing slash or empty path remainder */
+                    break; 
                 }
-                continue; /* consecutive slashes */
+                continue; 
             }
 
             if (*p == '\0') {
-                /* Final component (the file itself) -- do not
-                 * create it as a directory. Stop here. */
+                
+
                 break;
             }
 
-            /* Append '/' + this component to the ACCUMULATED path
-             * (not a fresh one each time -- this is exactly the bug
-             * fixed above). */
+            
+
+
             if (full_len < sizeof(full_path) - 1) {
                 full_path[full_len++] = '/';
             }
@@ -206,16 +206,16 @@ static void ensure_parent_dirs_exist(const char *path)
             }
             full_path[full_len] = '\0';
 
-            /* vfs_create returns false if the directory already
-             * exists -- expected and fine on every call after the
-             * first for a given prefix; only actual creation
-             * failures for a genuinely new directory matter, and
-             * those surface downstream when the final file's own
-             * vfs_open fails. Printed either way (per the project's
-             * "make key operations visible for debugging" standard)
-             * so a boot log shows exactly which directories vpkg
-             * touched, not just the eventual pass/fail of the whole
-             * install. */
+            
+
+
+
+
+
+
+
+
+
             bool created = vfs_create(full_path, INODE_DIRECTORY);
             printk_level(LOG_DEBUG, "vpkg: mkdir %s: %s\n",
                          full_path, created ? "created" : "already exists");
@@ -230,14 +230,14 @@ static void ensure_parent_dirs_exist(const char *path)
     }
 }
 
-/* Copies one mapped file from the archive into its real VulcanOS
- * destination via the VFS. Creates the destination file if it
- * doesn't exist (vpkg-installed files are always fresh installs at
- * this bring-up milestone -- overwriting an existing file from a
- * DIFFERENT package is possible and not specially guarded against,
- * matching real package managers' own "last install wins" behavior
- * for genuinely conflicting files, though VulcanOS has no conflict
- * DETECTION/warning yet either). */
+
+
+
+
+
+
+
+
 static bool install_one_file(const struct vpk_entry *entry, const char *dest_path)
 {
     printk_level(LOG_DEBUG, "install_one_file: ENTER dest=\"%s\" content_len=%llu\n",
@@ -370,9 +370,9 @@ enum vpkg_result vpkg_remove(const char *name)
         return VPKG_ERR_NOT_INSTALLED;
     }
 
-    /* See vpkg_remove's own documented limitation in vpkg.h: this
-     * does not delete the files the package installed, only the
-     * database record. */
+    
+
+
     for (u32 i = index; i < installed_count - 1; i++) {
         installed[i] = installed[i + 1];
     }

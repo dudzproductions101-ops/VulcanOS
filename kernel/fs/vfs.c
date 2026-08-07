@@ -1,8 +1,8 @@
-/*
- * vfs.c - VulcanOS Virtual Filesystem layer
- *
- * See fs/vfs.h for the mount-table and path-resolution design.
- */
+
+
+
+
+
 
 #include "fs/vfs.h"
 #include "printk.h"
@@ -36,11 +36,11 @@ bool vfs_mount(const char *prefix, struct inode *root)
 {
     for (int i = 0; i < VULCAN_MAX_MOUNTS; i++) {
         if (mounts[i].in_use && mounts[i].prefix[0] == prefix[0]) {
-            /* Cheap first-character check before the full compare
-             * below, since this loop runs at most VULCAN_MAX_MOUNTS
-             * (8) times -- not a meaningful optimization at this
-             * scale, but keeps the common "definitely different
-             * prefix" case from even reaching str comparison. */
+            
+
+
+
+
             usize i_len = str_len(mounts[i].prefix);
             usize p_len = str_len(prefix);
             if (i_len == p_len) {
@@ -67,7 +67,7 @@ bool vfs_mount(const char *prefix, struct inode *root)
                 return false;
             }
             for (usize j = 0; j <= len; j++) {
-                mounts[i].prefix[j] = prefix[j]; /* includes the NUL */
+                mounts[i].prefix[j] = prefix[j]; 
             }
             mounts[i].root = root;
             mounts[i].in_use = true;
@@ -81,9 +81,9 @@ bool vfs_mount(const char *prefix, struct inode *root)
     return false;
 }
 
-/* Finds the mount whose prefix is the LONGEST match for `path` --
- * see the file comment in vfs.h's struct mount for why longest-
- * match-wins is the correct rule once more than one mount exists. */
+
+
+
 static struct mount *find_mount_for_path(const char *path)
 {
     struct mount *best = NULL;
@@ -115,11 +115,11 @@ static struct mount *find_mount_for_path(const char *path)
 struct inode *vfs_resolve(const char *path)
 {
     if (path[0] != '/') {
-        return NULL; /* VulcanOS's VFS only resolves absolute paths;
-                       * relative-path resolution (against a process's
-                       * current working directory) is userland/libc
-                       * scope once processes have their own cwd
-                       * tracking, not a VFS-layer concern */
+        return NULL; 
+
+
+
+
     }
 
     struct mount *m = find_mount_for_path(path);
@@ -129,11 +129,11 @@ struct inode *vfs_resolve(const char *path)
 
     struct inode *current = m->root;
 
-    /* Walk path components after the mount prefix. For the root
-     * mount ("/"), this means walking every component of the path;
-     * for a longer future mount prefix, only the remainder after
-     * that prefix is walked, starting from that mount's own root
-     * rather than re-walking from "/". */
+    
+
+
+
+
     usize prefix_len = str_len(m->prefix);
     const char *remainder = path + prefix_len;
 
@@ -162,7 +162,7 @@ struct inode *vfs_resolve(const char *path)
             }
         } else {
             if (comp_len >= VULCAN_FILENAME_MAX - 1) {
-                return NULL; /* component too long */
+                return NULL; 
             }
             component[comp_len++] = *p;
         }
@@ -245,10 +245,10 @@ isize vfs_write(vulcan_fd_t fd, const void *buf, usize size)
     return result;
 }
 
-/* Splits `path` into its parent directory path and final component
- * name -- shared by vfs_create and vfs_unlink, both of which need
- * exactly this split (resolve the parent, operate on the child name
- * within it) rather than duplicating the split logic in each. */
+
+
+
+
 static bool split_parent_and_name(const char *path, char *parent_out, char *name_out)
 {
     usize len = str_len(path);
@@ -264,12 +264,12 @@ static bool split_parent_and_name(const char *path, char *parent_out, char *name
     }
 
     if (last_slash < 0) {
-        return false; /* no slash at all -- not a valid absolute path */
+        return false; 
     }
 
     usize name_len = len - (usize)last_slash - 1;
     if (name_len == 0 || name_len >= VULCAN_FILENAME_MAX) {
-        return false; /* trailing slash with nothing after it, or name too long */
+        return false; 
     }
 
     if (last_slash == 0) {

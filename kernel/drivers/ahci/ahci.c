@@ -120,7 +120,7 @@ static bool ahci_port_device_present(volatile struct ahci_port *port)
 static void ahci_port_start(volatile struct ahci_port *port)
 {
     while (port->cmd & AHCI_PORT_CMD_CR) {
-        /* wait for command engine to stop */
+        
     }
     port->cmd |= AHCI_PORT_CMD_FRE;
     port->cmd |= AHCI_PORT_CMD_ST;
@@ -228,7 +228,7 @@ static bool ahci_port_issue_command(struct ahci_port_state *state, bool write,
 
     volatile u8 *cfis = (volatile u8 *)cmd_table->cfis;
     cfis[0] = AHCI_FIS_TYPE_REG_H2D;
-    cfis[1] = 1u << 7; /* command */
+    cfis[1] = 1u << 7; 
     cfis[2] = command;
     cfis[3] = 0;
 
@@ -246,7 +246,7 @@ static bool ahci_port_issue_command(struct ahci_port_state *state, bool write,
     cfis[14] = 0;
     cfis[15] = 0;
 
-    port->is = (u32)-1; /* clear pending interrupt bits */
+    port->is = (u32)-1; 
     port->ci |= (1u << slot);
 
     usize attempts = 0;

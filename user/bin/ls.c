@@ -1,14 +1,14 @@
-/*
- * ls.c - VulcanOS's ls utility
- *
- * Lists the contents of a directory, one entry per line, with a
- * trailing "/" on directory entries -- the minimal, information-
- * dense output this bring-up milestone's utilities aim for (see the
- * "developer-focused, not beginner-oversized" goal in the project's
- * design docs). No -l/-a/-h flag handling yet; real POSIX ls's rich
- * flag set is straightforward future work once something actually
- * needs it, matching the same scoping call made in echo.c.
- */
+
+
+
+
+
+
+
+
+
+
+
 
 #include "stdio.h"
 

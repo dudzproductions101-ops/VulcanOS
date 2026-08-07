@@ -1,11 +1,11 @@
-/*
- * framebuffer.c - Minimal Multiboot2 framebuffer support
- *
- * This module is intentionally small: it only detects the GRUB-
- * provided linear framebuffer tag and exposes a tiny pixel API for
- * software rendering. It is not a full graphics driver, but it is a
- * real kernel-side building block for the graphical userland path.
- */
+
+
+
+
+
+
+
+
 
 #include "drivers/framebuffer.h"
 #include "multiboot2.h"
@@ -66,7 +66,7 @@ static bool framebuffer_tag_visitor(struct mb2_tag *tag, void *ctx)
                  "framebuffer: detected %ux%u %u-bit buffer, pitch=%u\n",
                  fb_info.width, fb_info.height, fb_info.bpp, fb_info.pitch);
 
-    return false; /* stop walking once we found framebuffer info */
+    return false; 
 }
 
 void framebuffer_init(u64 mb2_info_addr)

@@ -1,11 +1,11 @@
-/*
- * driver_manager.c - Generic driver registration and initialization
- *
- * This simple manager tracks a small set of kernel drivers and
- * initializes them during bring-up. It is intentionally minimal,
- * because the early stage of VulcanOS only needs a few drivers,
- * but it establishes a clean place to add more driver classes later.
- */
+
+
+
+
+
+
+
+
 
 #include "drivers/driver.h"
 #include "printk.h"

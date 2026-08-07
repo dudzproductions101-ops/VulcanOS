@@ -4,7 +4,7 @@
 #include "mm/allocator.h"
 #include "printk.h"
 
-#define RAMDISK_DEFAULT_SIZE (4 * 1024 * 1024) /* 4 MiB */
+#define RAMDISK_DEFAULT_SIZE (4 * 1024 * 1024) 
 
 static u8 *ramdisk_buf = NULL;
 static u64 ramdisk_size = 0;
@@ -33,8 +33,8 @@ isize ramdisk_read(u64 offset, void *buf, usize size)
 
 static bool ramdisk_probe(void)
 {
-    /* Always available once allocated in init; probe returns true
-     * only when we have a buffer. */
+    
+
     return ramdisk_available();
 }
 
@@ -72,7 +72,7 @@ static void ramdisk_init_driver(void)
         }
         ramdisk_size = RAMDISK_DEFAULT_SIZE;
         for (u64 i = 0; i < ramdisk_size; i++) {
-            ramdisk_buf[i] = 0; /* empty image by default */
+            ramdisk_buf[i] = 0; 
         }
         printk_level(LOG_INFO, "ramdisk: allocated %llu bytes\n", ramdisk_size);
         if (!block_device_register("ram0", ramdisk_size, NULL,

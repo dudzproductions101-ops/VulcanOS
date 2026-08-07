@@ -1,14 +1,14 @@
-/*
- * allocator.c - Kernel heap allocator (kmalloc/kfree)
- *
- * See mm/allocator.h for the first-fit-over-slab design rationale.
- *
- * Layout: a singly-linked list of blocks, each preceded by a
- * block_header. Free blocks are linked via `next_free`; allocated
- * blocks are not in that list at all (rather than a "free" flag
- * that free-list code has to remember to check), so walking the
- * free list can never accidentally hand out a block still in use.
- */
+
+
+
+
+
+
+
+
+
+
+
 
 #include "mm/allocator.h"
 #include "mm/paging.h"
@@ -16,22 +16,22 @@
 #include "printk.h"
 #include "panic.h"
 
-/* Placed well above the kernel image itself (which starts at
- * VULCAN_KERNEL_VBASE) so heap growth can never collide with
- * kernel code/data as the image grows across future development. */
-#define KHEAP_VBASE (0xFFFFFFFF90000000ULL)
-#define KHEAP_MAX_SIZE (256ULL * 1024 * 1024) /* 256 MiB address-space ceiling */
 
-#define BLOCK_MAGIC 0x4B4845415041u /* "KHEAPA" truncated to fit; sanity-check only */
+
+
+#define KHEAP_VBASE (0xFFFFFFFF90000000ULL)
+#define KHEAP_MAX_SIZE (256ULL * 1024 * 1024) 
+
+#define BLOCK_MAGIC 0x4B4845415041u 
 
 struct block_header {
     u64 magic;
-    usize size;              /* usable size, not including this header */
+    usize size;              
     bool free;
     struct block_header *next_free;
 };
 
-static vaddr_t heap_current_end = 0;   /* first not-yet-mapped virtual address */
+static vaddr_t heap_current_end = 0;   
 static struct block_header *free_list = NULL;
 
 static bool heap_grow(usize min_size)
@@ -40,14 +40,14 @@ static bool heap_grow(usize min_size)
     usize pages_needed = (needed + PMM_FRAME_SIZE - 1) / PMM_FRAME_SIZE;
 
     if (heap_current_end + pages_needed * PMM_FRAME_SIZE - KHEAP_VBASE > KHEAP_MAX_SIZE) {
-        return false; /* would exceed the heap's reserved address range */
+        return false; 
     }
 
     vaddr_t start = heap_current_end;
     for (usize i = 0; i < pages_needed; i++) {
         paddr_t frame = pmm_alloc_frame();
         if (frame == 0) {
-            return false; /* physical memory exhausted partway through growth */
+            return false; 
         }
         if (!paging_map_page(heap_current_end, frame, PAGE_PRESENT | PAGE_WRITABLE)) {
             pmm_free_frame(frame);
@@ -74,10 +74,10 @@ void kheap_init(void)
                  KHEAP_VBASE, KHEAP_MAX_SIZE / (1024 * 1024));
 }
 
-/* Simple 16-byte alignment for all returned pointers -- sufficient
- * for every scalar type on x86_64 and for SSE-aligned data should
- * VulcanOS's freestanding code ever re-enable SSE (currently
- * disabled kernel-wide via -mno-sse, see kernel/Makefile). */
+
+
+
+
 static inline usize align_up(usize n, usize align)
 {
     return (n + align - 1) & ~(align - 1);
@@ -95,10 +95,10 @@ void *kmalloc(usize size)
 
     while (curr) {
         if (curr->free && curr->size >= size) {
-            /* Split the block if there's enough room left over to
-             * form another usable free block (i.e. more than just
-             * a header's worth of slack), so we don't waste large
-             * allocations by handing out an oversized block whole. */
+            
+
+
+
             if (curr->size >= size + sizeof(struct block_header) + 16) {
                 struct block_header *remainder =
                     (struct block_header *)((u8 *)curr + sizeof(struct block_header) + size);
@@ -113,7 +113,7 @@ void *kmalloc(usize size)
 
             curr->free = false;
 
-            /* Unlink curr from the free list. */
+            
             if (prev) {
                 prev->next_free = curr->next_free;
             } else {
@@ -128,9 +128,9 @@ void *kmalloc(usize size)
         curr = curr->next_free;
     }
 
-    /* Nothing big enough in the free list; grow the heap and retry
-     * exactly once. If growth itself fails, we are genuinely out of
-     * either address space or physical memory. */
+    
+
+
     if (!heap_grow(size)) {
         return NULL;
     }
@@ -157,9 +157,9 @@ void kfree(void *ptr)
     block->next_free = free_list;
     free_list = block;
 
-    /* NOTE: does not coalesce adjacent free blocks. Under sustained
-     * alloc/free churn this will fragment; coalescing (or a more
-     * structured allocator) is a documented follow-up once real
-     * allocation patterns exist to design it around, rather than
-     * guessed at now. */
+    
+
+
+
+
 }

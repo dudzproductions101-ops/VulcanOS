@@ -1,47 +1,47 @@
-/*
- * stdio.c - VulcanOS libc standard I/O implementation
- *
- * See stdio.h and stdlib.c's file comments for the interim direct-
- * kernel-call design this entire libc follows.
- *
- * File descriptor numbering: 0/1/2 (stdin/stdout/stderr) are
- * special-cased to route directly to the console/keyboard driver
- * rather than through vfs_open/vfs_read/vfs_write, matching standard
- * Unix convention that these three are always pre-opened and don't
- * correspond to an ordinary VFS-resolvable path. Every other fd
- * value maps to the VFS's own file descriptor table (kernel/fs/
- * vfs.c), but NOT as the same number -- see VULCAN_FD_OFFSET below
- * for why a translation is required here, not optional.
- */
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 #include "stdio.h"
 #include "string.h"
 #include "fs/vfs.h"
 #include "drivers/console.h"
 
-/* File descriptor numbering: libc reserves 0/1/2 for the standard
- * streams (VULCAN_STDIN/STDOUT/STDERR), matching standard Unix
- * convention. Every REAL VFS file descriptor is offset by this
- * amount before being returned to callers, and translated back on
- * every read/write/close call -- this is a real fix for a real bug
- * found during libc bring-up, not a style choice: vfs_open()
- * (kernel/fs/vfs.c) returns raw array indices into its own
- * open_files[] table starting from 0, with no awareness of (or
- * reason to be aware of) libc's standard-stream convention layered
- * on top of it. Without this offset, the very first file libc ever
- * opens after the VFS table is empty gets fd 0 -- which write() and
- * read() then misinterpret as stdin, since they check `fd ==
- * VULCAN_STDIN` before ever reaching the VFS. Confirmed via a
- * targeted diagnostic print showing exactly this: wfd=0,
- * written=-1 (the "not writable, this is stdin" error path).
- *
- * Keeping the VFS layer itself ignorant of "some fd numbers are
- * reserved" is the correct layering call, not a workaround forced
- * by convenience: the VFS doesn't own or know about libc's stream
- * convention, so it shouldn't need special-case logic for it --
- * libc, which DOES own that convention, is the right place to
- * translate between "the number a program sees" and "the number
- * the VFS's own table actually uses." */
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 #define VULCAN_FD_OFFSET 3
 
 static char current_working_directory[VULCAN_PATH_MAX] = "/";
@@ -159,11 +159,11 @@ static bool resolve_path(const char *path, char *out)
 
 int open(const char *path, int flags)
 {
-    (void)flags; /* vfs_open's current contract has no read/write-only
-                  * distinction to honor yet -- accepted as a parameter
-                  * here so caller code already looks like a real POSIX
-                  * open() call and won't need to change once the VFS
-                  * grows real flag handling. */
+    (void)flags; 
+
+
+
+
 
     char abs_path[VULCAN_PATH_MAX];
     if (!resolve_path(path, abs_path)) {
@@ -187,10 +187,10 @@ int open(const char *path, int flags)
 void close(int fd)
 {
     if (fd == VULCAN_STDIN || fd == VULCAN_STDOUT || fd == VULCAN_STDERR) {
-        return; /* standard streams are never actually closed */
+        return; 
     }
     if (fd < VULCAN_FD_OFFSET) {
-        return; /* not a fd this libc ever handed out */
+        return; 
     }
     vfs_close((vulcan_fd_t)(fd - VULCAN_FD_OFFSET));
 }
@@ -280,12 +280,12 @@ ssize_t read(int fd, void *buf, usize count)
         extern char keyboard_read(void);
         u8 *out = buf;
         usize got = 0;
-        /* Non-blocking: returns whatever is immediately available
-         * (possibly 0 bytes) rather than waiting for input, matching
-         * keyboard_read()'s own non-blocking contract (drivers/
-         * keyboard.h). A real blocking stdin read is future work
-         * once the scheduler supports THREAD_BLOCKED-with-wake for
-         * "waiting on a keypress," not yet implemented. */
+        
+
+
+
+
+
         while (got < count) {
             char c = keyboard_read();
             if (c == 0) {
@@ -297,11 +297,11 @@ ssize_t read(int fd, void *buf, usize count)
     }
 
     if (fd == VULCAN_STDOUT || fd == VULCAN_STDERR) {
-        return -1; /* not readable */
+        return -1; 
     }
 
     if (fd < VULCAN_FD_OFFSET) {
-        return -1; /* not a fd this libc ever handed out */
+        return -1; 
     }
 
     return vfs_read((vulcan_fd_t)(fd - VULCAN_FD_OFFSET), buf, count);
@@ -315,27 +315,27 @@ ssize_t write(int fd, const void *buf, usize count)
     }
 
     if (fd == VULCAN_STDIN) {
-        return -1; /* not writable */
+        return -1; 
     }
 
     if (fd < VULCAN_FD_OFFSET) {
-        return -1; /* not a fd this libc ever handed out */
+        return -1; 
     }
 
     return vfs_write((vulcan_fd_t)(fd - VULCAN_FD_OFFSET), buf, count);
 }
 
-/* --- printf ------------------------------------------------------
- *
- * A from-scratch variadic formatter, independent of the kernel's
- * own printk (see this file's top comment for why). Supports the
- * same practical specifier subset printk does (%d %u %x %s %c %p
- * %%, plus an ll-length modifier for 64-bit values) rather than the
- * full C standard's specifier set -- this is a bring-up-milestone
- * libc for a CLI-first OS, not a general-purpose hosted C library;
- * growing this to cover %f/%g and friends is straightforward future
- * work once something actually needs floating-point formatting.
- */
+
+
+
+
+
+
+
+
+
+
+
 
 typedef __builtin_va_list va_list;
 #define va_start(ap, last) __builtin_va_start(ap, last)
@@ -354,12 +354,12 @@ static void sink_putc(struct printf_sink *sink, char c)
     if (sink->len < PRINTF_BUF_MAX - 1) {
         sink->buf[sink->len++] = c;
     }
-    /* Silently truncates past PRINTF_BUF_MAX -- a real libc would
-     * grow a dynamic buffer or stream output incrementally; fixed
-     * at 512 bytes here because nothing in this bring-up milestone's
-     * userland (see user/ -- ls, cat, echo, the shell) needs a
-     * single printf call to produce more output than that. Worth
-     * revisiting if a future utility's output genuinely needs more. */
+    
+
+
+
+
+
 }
 
 static void sink_write_uint(struct printf_sink *sink, u64 value, int base, bool uppercase)
@@ -472,11 +472,11 @@ int printf(const char *fmt, ...)
     return (int)sink.len;
 }
 
-/* --- Directory listing --------------------------------------------
- *
- * See stdio.h for the design note on why this isn't a full POSIX
- * opendir/readdir/closedir API yet.
- */
+
+
+
+
+
 
 int vulcan_readdir(const char *path, unsigned long index, struct vulcan_dirent *out)
 {

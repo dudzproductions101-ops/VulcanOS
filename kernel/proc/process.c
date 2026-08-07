@@ -1,6 +1,6 @@
-/*
- * process.c - Process lifecycle management
- */
+
+
+
 
 #include "proc/process.h"
 #include "proc/thread.h"
@@ -35,9 +35,9 @@ struct process *process_create(const char *name, void (*entry_point)(void))
     p->thread_count = 0;
     p->next = NULL;
 
-    /* Every process currently shares the kernel's own page tables --
-     * see the file comment in process.h for why page_table_root is
-     * nonetheless a real field rather than assumed implicitly. */
+    
+
+
     p->page_table_root = read_cr3();
 
     struct thread *t = thread_create(p, entry_point);
@@ -55,11 +55,11 @@ void process_exit(struct process *p, int exit_code)
     p->state = PROCESS_EXITED;
     p->exit_code = exit_code;
 
-    /* Threads are NOT destroyed here -- matching the zombie-process
-     * convention described in process.h: the process control block
-     * (and by extension its thread list) stays inspectable until
-     * something explicitly reaps it. Actual thread teardown is the
-     * scheduler's job once a thread reaches THREAD_DEAD. */
+    
+
+
+
+
     printk_level(LOG_INFO, "process: pid=%llu \"%s\" exited with code %d\n",
                  p->pid, p->name, exit_code);
 }

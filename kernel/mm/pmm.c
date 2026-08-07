@@ -1,28 +1,28 @@
-/*
- * pmm.c - Physical Memory Manager (bitmap frame allocator)
- *
- * BOOTSTRAP NOTE: the bitmap itself cannot be allocated by the
- * allocator it implements (nothing exists yet to allocate it from).
- * It is instead a fixed-size static array in .bss, sized for the
- * largest physical memory VulcanOS's first bring-up milestone
- * targets (see MAX_TRACKED_FRAMES below). This is a real, documented
- * limitation, not an oversight: systems with more physical memory
- * than MAX_TRACKED_FRAMES covers will have the excess silently
- * unusable until this is replaced with a dynamically-sized bitmap
- * placed after the kernel image once paging can map arbitrary
- * physical pages (a chicken-and-egg problem paging.c's early-boot
- * identity map exists specifically to break).
- */
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 #include "mm/pmm.h"
 #include "multiboot2.h"
 #include "printk.h"
 #include "panic.h"
 
-/* 4 GiB of tracked physical memory at 4 KiB/frame = 1,048,576 frames
- * = 131,072 bytes of bitmap (128 KiB). Chosen as a reasonable cap
- * for a bring-up milestone kernel; see the bootstrap note above for
- * what a proper fix looks like. */
+
+
+
+
 #define MAX_TRACKED_FRAMES (4ULL * 1024 * 1024 * 1024 / PMM_FRAME_SIZE)
 #define BITMAP_SIZE_BYTES (MAX_TRACKED_FRAMES / 8)
 
@@ -31,9 +31,9 @@ static u64 total_frames = 0;
 static u64 free_frames_count = 0;
 static u64 highest_frame_seen = 0;
 
-/* Provided by linker.ld; mark the kernel's own physical footprint
- * as reserved so the allocator never hands out a frame the kernel
- * itself is sitting in. */
+
+
+
 extern u8 kernel_start[];
 extern u8 kernel_end[];
 
@@ -76,7 +76,7 @@ static bool mmap_tag_visitor(struct mb2_tag *tag, void *ctx_ptr)
     struct mmap_visit_ctx *ctx = (struct mmap_visit_ctx *)ctx_ptr;
 
     if (tag->type != MB2_TAG_TYPE_MMAP) {
-        return true; /* keep walking */
+        return true; 
     }
 
     ctx->found = true;
@@ -105,16 +105,16 @@ static bool mmap_tag_visitor(struct mb2_tag *tag, void *ctx_ptr)
         }
     }
 
-    return false; /* found what we need, stop walking */
+    return false; 
 }
 
 void pmm_init(u64 mb2_info_addr)
 {
-    /* Start with every tracked frame marked used; the mmap walk
-     * below frees exactly the ranges firmware reports as available.
-     * This is the safer default direction: an unrecognized or
-     * misreported region stays reserved (never handed out) rather
-     * than silently becoming allocatable. */
+    
+
+
+
+
     for (u64 i = 0; i < BITMAP_SIZE_BYTES; i++) {
         frame_bitmap[i] = 0xFF;
     }
@@ -132,10 +132,10 @@ void pmm_init(u64 mb2_info_addr)
         total_frames = MAX_TRACKED_FRAMES;
     }
 
-    /* Reserve the kernel's own image and the legacy first 1 MiB
-     * (real-mode IVT, BDA, VGA memory, option ROMs) even though a
-     * well-behaved firmware's mmap should already mark these
-     * reserved -- defense in depth against a mmap that doesn't. */
+    
+
+
+
     reserve_region(0x0, 0x100000);
     reserve_region((paddr_t)(uptr)kernel_start, (paddr_t)(uptr)kernel_end);
 
@@ -153,14 +153,14 @@ paddr_t pmm_alloc_frame(void)
             return f * PMM_FRAME_SIZE;
         }
     }
-    return 0; /* out of memory; caller decides how fatal that is */
+    return 0; 
 }
 
 void pmm_free_frame(paddr_t addr)
 {
     u64 frame = addr / PMM_FRAME_SIZE;
     if (frame >= total_frames) {
-        return; /* address outside tracked range; ignore rather than corrupt */
+        return; 
     }
     if (bitmap_test(frame)) {
         bitmap_clear(frame);

@@ -1,21 +1,21 @@
-/*
- * printk.c - Kernel-space formatted output implementation
- *
- * A small, self-contained printf-family formatter. Supports the
- * subset of format specifiers the kernel actually needs (%d, %u,
- * %x, %llx/%llu for 64-bit values, %s, %c, %p, %%) rather than the
- * full C standard's specifier set, since a kernel log formatter
- * pulling in locale-aware float formatting would be scope creep for
- * something that runs before a heap even exists.
- */
+
+
+
+
+
+
+
+
+
+
 
 #include "printk.h"
 #include "drivers/console.h"
 
-/* Freestanding code has no <stdarg.h> guarantee from a real target
- * triple, but GCC's builtin va_list machinery works identically in
- * freestanding mode and is the standard way every from-scratch
- * kernel handles variadic printk. */
+
+
+
+
 typedef __builtin_va_list va_list;
 #define va_start(ap, last) __builtin_va_start(ap, last)
 #define va_arg(ap, type)   __builtin_va_arg(ap, type)
@@ -46,9 +46,9 @@ static void print_int(i64 value)
 {
     if (value < 0) {
         console_putc('-');
-        /* Cast through u64 before negating: negating INT64_MIN as a
-         * signed value is undefined behavior, negating as unsigned
-         * is well-defined two's-complement wraparound. */
+        
+
+
         print_uint((u64)(-(value + 1)) + 1, 10, false);
     } else {
         print_uint((u64)value, 10, false);
@@ -116,9 +116,9 @@ static void vprintk(const char *fmt, va_list ap)
             console_putc('%');
             break;
         default:
-            /* Unknown specifier: print it literally rather than
-             * silently eating input, so format-string bugs surface
-             * as visibly wrong output instead of vanishing. */
+            
+
+
             console_putc('%');
             console_putc(*p);
             break;
