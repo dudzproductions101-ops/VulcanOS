@@ -1,20 +1,3 @@
-/*
- * kernel.c - VulcanOS kernel entry point
- *
- * kmain() is called once from long_mode_start (boot.asm) after the
- * CPU is in 64-bit mode with temporary identity-mapped paging
- * active. Its job for this bring-up milestone: stand up enough of
- * the platform (console, GDT, IDT/PIC, timer, keyboard) to prove
- * the kernel is alive and can talk to hardware, then idle.
- *
- * NOTE: the version of this file originally in the archive defined
- * an include guard named PANIC_H around a panic() prototype and
- * #include"panic.c" (a .c-including-.c, which doesn't compile) --
- * a copy-paste artifact from panic.h, not intentional. This version
- * declares its own KERNEL_H-scoped contents and includes only
- * headers.
- */
-
 #include "kernel.h"
 #include "printk.h"
 #include "panic.h"

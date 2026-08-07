@@ -1,22 +1,3 @@
-/*
- * interrupts.c - Interrupt dispatch policy
- *
- * Owns three things: remapping the legacy 8259 PIC so IRQs land on
- * vectors 32-47 instead of colliding with CPU exceptions, wiring
- * every ISR/IRQ assembly stub into the IDT, and routing each
- * incoming interrupt to either a registered IRQ handler or the
- * fault-reporting path for unhandled CPU exceptions.
- *
- * ROADMAP NOTE: the 8259 PIC is the simplest interrupt controller to
- * bring up (no ACPI/MADT parsing required) and is what every legacy-
- * compatible x86 platform still exposes at boot, which is why
- * VulcanOS starts here. Once ACPI table parsing exists, VulcanOS
- * should migrate to the I/O APIC + Local APIC, which is required
- * for any real multicore support (see the roadmap in the writeup).
- * That migration should replace this file's PIC calls, not sit
- * alongside them indefinitely.
- */
-
 #include "arch/x86_64/interrupts.h"
 #include "syscall.h"
 #include "arch/x86_64/idt.h"
@@ -36,11 +17,6 @@
 #define ICW1_ICW4 0x01
 #define ICW4_8086 0x01
 
-/* Every isrN/irqN symbol is defined in interrupts.asm. Declaring
- * them all here (rather than generating this list) is repetitive on
- * purpose: it keeps the ISR table below a single readable source of
- * truth for "which vectors exist" instead of hiding it behind
- * macro-generated symbol names a reader can't grep for. */
 extern void isr0(void);  extern void isr1(void);  extern void isr2(void);
 extern void isr3(void);  extern void isr4(void);  extern void isr5(void);
 extern void isr6(void);  extern void isr7(void);  extern void isr8(void);
@@ -80,14 +56,14 @@ static void pic_remap(void)
     outb(PIC2_CMD, ICW1_INIT | ICW1_ICW4);
     io_wait();
 
-    outb(PIC1_DATA, IRQ_BASE);         /* master PIC vector offset */
+    outb(PIC1_DATA, IRQ_BASE);        
     io_wait();
-    outb(PIC2_DATA, IRQ_BASE + 8);     /* slave PIC vector offset */
+    outb(PIC2_DATA, IRQ_BASE + 8);    
     io_wait();
 
-    outb(PIC1_DATA, 4);                /* tell master about slave on IRQ2 */
+    outb(PIC1_DATA, 4);                
     io_wait();
-    outb(PIC2_DATA, 2);                /* tell slave its cascade identity */
+    outb(PIC2_DATA, 2);                
     io_wait();
 
     outb(PIC1_DATA, ICW4_8086);
@@ -95,8 +71,8 @@ static void pic_remap(void)
     outb(PIC2_DATA, ICW4_8086);
     io_wait();
 
-    outb(PIC1_DATA, mask1);            /* restore saved masks rather than */
-    outb(PIC2_DATA, mask2);            /* unmasking everything blindly */
+    outb(PIC1_DATA, mask1);        
+    outb(PIC2_DATA, mask2);            
 }
 
 void irq_send_eoi(u8 irq)
@@ -154,34 +130,12 @@ void interrupts_install(void)
 
     idt_set_gate(IRQ_TIMER,    (u64)irq0, GDT_SEL_KERNEL_CODE, IDT_GATE_INTERRUPT);
     idt_set_gate(IRQ_KEYBOARD, (u64)irq1, GDT_SEL_KERNEL_CODE, IDT_GATE_INTERRUPT);
-    /* syscall trap vector: make user-callable by setting DPL=3 (0xEF) */
     idt_set_gate(128, (u64)isr128, GDT_SEL_KERNEL_CODE, 0xEF);
 
     sti();
 }
-
-/* Called by isr_common_stub for every vector. Vectors 0-31 are CPU
- * exceptions (currently fatal -- VulcanOS has no fault recovery yet,
- * see roadmap); vectors 32+ are hardware IRQs dispatched to whatever
- * driver registered a handler via irq_register_handler().
- *
- * EOI ORDERING IS DELIBERATE AND LOAD-BEARING: irq_send_eoi() is
- * called BEFORE the handler, not after. A handler like the timer's
- * may call into the scheduler and trigger a context switch that
- * never returns back to this function at all (context_switch's
- * `ret` lands in a completely different thread's call stack). If
- * EOI were sent after the handler call, a context-switching
- * handler would skip it entirely -- the 8259 PIC would then believe
- * that IRQ line is still "in service" and never raise it again,
- * silently freezing that IRQ forever after the very first switch.
- * This was a real bug caught during scheduler bring-up: exactly one
- * preemption occurred, then the timer appeared to stop firing
- * entirely, which is exactly this failure mode. Sending EOI first
- * means the PIC's bookkeeping is always correctly closed out
- * regardless of whether the handler beneath it ever returns. */
 void isr_dispatch(struct interrupt_frame *frame)
 {
-    /* Special-case syscall vector first (not routed via PIC). */
     if (frame->vector == 128) {
         syscall_handle(frame);
         return;

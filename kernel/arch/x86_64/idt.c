@@ -1,12 +1,3 @@
-/*
- * idt.c - Interrupt Descriptor Table installation
- *
- * Builds the 256-entry IDT and loads it. Individual gate handlers
- * are installed by interrupts.c, which owns vector-to-handler policy;
- * this file only owns the mechanical "write a gate descriptor and
- * load the table" part.
- */
-
 #include "arch/x86_64/idt.h"
 
 static struct idt_entry idt[IDT_ENTRIES];
