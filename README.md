@@ -3,7 +3,7 @@
 ## Version 2.9
 
 <div align="center">
-  <pre><code>
+<pre><code>
                  xl""``""lx
                  X8Xxx..xxX8X
                  8X8bdX8bd8X8
@@ -15,75 +15,36 @@
       _.-dX8X8XbdX8X8X8X8X8XdbX8X8Xb-._
    .-d8X8X8X8bdX8X8X8X8X8X8X8X8db8X8X8X8b-.
 .-d8X8X8X8X8bdX8X8X8X8X8X8X8X8X8db8X8X8-RG-b-.
-  </code></pre>
+</code></pre>
 </div>
 
-VulcanOS is a from-scratch, bare-metal operating system targeting **x86_64 systems**.
+VulcanOS is a from-scratch, bare-metal operating system targeting x86_64 systems. The project is focused on building an operating system from the ground up, including the kernel, memory management, filesystem architecture, hardware support, userspace, package management, and eventually a graphical environment.
 
-VulcanOS is the successor to the original **OneOS** project. It represents a complete rewrite and redesign of the original system, with a new architecture, identity, and long-term direction.
+VulcanOS is the successor to the original OneOS project. Rather than continuing to build on the original codebase, VulcanOS represents a complete rewrite and redesign with a new architecture, identity, and long-term direction.
 
-The project is primarily written in **C**, with **x86 assembly** used where low-level hardware interaction requires it.
+The project is primarily written in C, with x86 assembly used where low-level hardware interaction requires it. VulcanOS is currently a text-based operating system and does not yet have a graphical desktop environment. The current system operates primarily from RAM, with a RAM-based filesystem and a custom Virtual Filesystem layer providing the foundation for future persistent filesystems.
 
-VulcanOS is currently a **text-based operating system**. It does **not yet have a graphical desktop environment**.
-
-The current system is also **RAM-based**: the active filesystem exists in memory and is not yet backed by persistent storage.
-
-The long-term goal is to build a complete operating system from the ground up, including persistent storage, hardware drivers, userspace applications, networking, and eventually a graphical environment.
+VulcanOS also includes its own package management system, VPKG, along with a growing collection of kernel and userspace infrastructure. The goal is to gradually turn these foundations into a complete and usable operating system rather than simply creating a bootable kernel.
 
 ---
 
 # Current Status
 
-VulcanOS is actively under development.
+VulcanOS is actively under development. The current focus is on building a stable foundation before moving toward larger features such as persistent storage and graphics.
 
-### Currently implemented
+The operating system currently includes an x86_64 kernel, bare-metal booting, a text-based environment, RAM filesystem support, the VulcanOS Virtual Filesystem (VFS), device filesystem infrastructure, memory management, system-call infrastructure, hardware discovery, process infrastructure, a command-line environment, and the VPKG package system.
 
-* x86_64 kernel
-* Bare-metal booting
-* Text-based system environment
-* RAM-based filesystem
-* VulcanOS Virtual Filesystem (VFS)
-* Device filesystem support
-* Process and kernel infrastructure
-* System calls
-* Memory management
-* Hardware discovery
-* Package management system
-* Command-line environment
-* Basic userspace infrastructure
-
-### Not implemented yet
-
-* Graphical desktop environment
-* Persistent filesystem/storage
-* Full disk filesystem drivers
-* Complete networking stack
-* Complete USB stack
-* Full hardware support
-* Production-ready security model
-
-The graphical system and persistent filesystem are part of the long-term roadmap and should not be considered current features.
+There is currently no graphical desktop, persistent disk filesystem, complete networking stack, complete USB stack, or production-ready security model. These are future goals rather than features that are currently complete.
 
 ---
 
 # History
 
-VulcanOS originally started as **OneOS**, a small terminal-only operating system created by me and my friend Rafa.
+VulcanOS began as OneOS, a small terminal-based operating system created by me and my friend Rafa. The original goal was to build an operating system as a learning and resume project, but as development continued, the project grew into a much larger systems programming experiment.
 
-The original goal was to build an operating system as both a learning project and a resume project. As development progressed, the project grew into a much larger systems programming effort.
+Eventually, the original OneOS architecture reached its limits. Instead of continuing to add features to an increasingly difficult codebase, development moved toward VulcanOS.
 
-OneOS eventually reached the limits of its original architecture. Rather than continuing to extend the existing system indefinitely, development transitioned into VulcanOS.
-
-VulcanOS is not simply a renamed version of OneOS. It is a substantial rewrite with:
-
-* A new architecture
-* A new identity
-* A redesigned kernel structure
-* A new filesystem architecture
-* New userspace infrastructure
-* A new long-term development direction
-
-The goal is to create a cleaner, more maintainable foundation for future operating system development.
+VulcanOS is therefore not simply a renamed version of OneOS. It is a substantial rewrite intended to provide a cleaner and more maintainable foundation for future development, with redesigned kernel structures, filesystem architecture, userspace infrastructure, and a new overall direction.
 
 ---
 
@@ -91,84 +52,39 @@ The goal is to create a cleaner, more maintainable foundation for future operati
 
 ## Text-Based Environment
 
-VulcanOS currently operates entirely through a **text-based environment**.
+VulcanOS currently operates through a text-based environment. The system does not yet provide a graphical desktop, window manager, compositor, or graphical application framework.
 
-The operating system does not currently provide a graphical desktop, window manager, compositor, or graphical application framework.
+The current priority is to build and stabilize the underlying operating system before introducing a graphical layer.
 
-The current focus is on building and stabilizing the underlying operating system before introducing a graphical layer.
+## RAM Filesystem
 
----
+The current filesystem is stored entirely in RAM, meaning its contents are temporary and are lost when the system shuts down or reboots.
 
-## RAM-Based Filesystem
+This filesystem provides the foundation for the operating system's file handling while persistent storage is being developed.
 
-The current VulcanOS filesystem is stored entirely in **RAM**.
+## Virtual Filesystem
 
-This means that filesystem contents are temporary and are lost when the system shuts down or reboots.
+VulcanOS includes its own Virtual Filesystem (VFS), which provides an abstraction between the rest of the operating system and individual filesystem implementations.
 
-The RAM filesystem provides the foundation for the operating system's filesystem architecture while persistent storage support is being developed.
+This allows the operating system to interact with files and directories through a common interface instead of requiring every component to understand the implementation details of a specific filesystem.
 
----
+The current filesystem infrastructure includes the VFS, RAM filesystem, device filesystem support, file and directory operations, filesystem abstractions, and device nodes.
 
-## VulcanOS Virtual Filesystem
-
-VulcanOS includes its own **Virtual Filesystem (VFS)** layer, referred to as the **Vulcan Filesystem architecture**.
-
-The VFS provides a common interface between userspace/kernel components and filesystem implementations.
-
-The current architecture is intended to eventually support multiple filesystem backends, including persistent storage filesystems.
-
-Current filesystem infrastructure includes:
-
-* Virtual filesystem layer
-* RAM filesystem
-* Device filesystem support
-* File and directory operations
-* Filesystem abstractions
-* Device nodes
-
-Persistent disk-backed filesystems are planned for future development.
-
----
+Persistent disk-backed filesystems are planned for the future.
 
 ## Package System
 
-VulcanOS already includes a package management system.
+VulcanOS includes its own package management system called VPKG. The package system is intended to provide a consistent way to package, install, manage, and distribute software for VulcanOS.
 
-The package system is designed to provide a way to install, manage, and distribute software for the operating system.
-
-The current package system is called **VPKG**.
-
-VPKG is part of the VulcanOS software ecosystem and is intended to become the primary way of managing userspace software and system packages.
+As the userspace grows, VPKG will become an increasingly important part of the operating system's software ecosystem.
 
 ---
 
 # Built-in Software
 
-VulcanOS currently provides a growing collection of system software and userspace components.
+VulcanOS currently provides a growing collection of system software and userspace components, including a command-line environment, shell utilities, filesystem utilities, system utilities, package management tools, development tools, and other userspace infrastructure.
 
-Current and developing components include:
-
-* Command-line environment
-* Shell utilities
-* Filesystem utilities
-* System utilities
-* Package management tools
-* Development tools
-* Userspace infrastructure
-
-Additional applications will be added as the userspace environment matures.
-
-A graphical application ecosystem is planned, but is **not currently implemented**.
-
----
-
-# Booting
-
-VulcanOS currently boots using a bootloader-based x86_64 boot process and can be tested using virtualization.
-
-The project is primarily developed and tested using **QEMU**.
-
-Real hardware support is an ongoing area of development and depends on the maturity of the kernel and hardware drivers.
+The software ecosystem is still in its early stages and will continue to expand as the underlying operating system becomes more capable.
 
 ---
 
@@ -176,55 +92,19 @@ Real hardware support is an ongoing area of development and depends on the matur
 
 ## Kernel
 
-VulcanOS contains a custom kernel designed specifically for the project.
+VulcanOS contains a custom kernel designed specifically for the project. Its current infrastructure includes x86_64 support, CPU initialization, interrupt handling, memory management, paging, system calls, kernel logging, debugging, hardware discovery, and process infrastructure.
 
-Current kernel infrastructure includes:
-
-* x86_64 architecture support
-* CPU initialization
-* Interrupt handling
-* Memory management
-* Paging infrastructure
-* System calls
-* Kernel logging
-* Kernel debugging
-* Hardware discovery
-* Process infrastructure
-
----
+The kernel is continuously being expanded as new hardware and operating-system functionality is implemented.
 
 ## Memory Management
 
-VulcanOS uses custom memory-management infrastructure designed for its kernel environment.
+VulcanOS uses custom memory-management infrastructure for handling physical and virtual memory. Current and planned functionality includes physical memory management, virtual memory, paging, kernel allocation, and userspace memory management.
 
-Current and planned functionality includes:
-
-* Physical memory management
-* Virtual memory
-* Paging
-* Kernel allocation
-* Userspace memory management
-
-Memory management is a core component of the current development effort because the operating system and filesystem currently operate primarily in RAM.
-
----
+Memory management is especially important to the current system because the filesystem and much of the operating environment currently operate in RAM.
 
 ## Hardware Support
 
-VulcanOS is designed to eventually support a broad range of x86_64 hardware.
-
-Current and planned hardware layers include:
-
-* CPU support
-* ACPI
-* PCI device discovery
-* Keyboard input
-* Mouse input
-* Display/framebuffer support
-* Storage devices
-* Network devices
-* USB devices
-* Audio devices
+VulcanOS is designed to eventually support a broad range of x86_64 hardware. Current and planned hardware layers include CPU support, ACPI, PCI device discovery, keyboard and mouse input, framebuffer/display support, storage devices, networking hardware, USB devices, and audio devices.
 
 Hardware support is being developed incrementally as the kernel architecture matures.
 
@@ -232,40 +112,23 @@ Hardware support is being developed incrementally as the kernel architecture mat
 
 # Process System
 
-VulcanOS is developing its own process and execution infrastructure.
+VulcanOS is developing its own process and execution infrastructure. This includes process management, threads, scheduling, context switching, inter-process communication, ELF loading, and eventually stronger separation between user and kernel space.
 
-Current and planned functionality includes:
-
-* Process management
-* Threads
-* Scheduling
-* Context switching
-* Inter-process communication
-* ELF loading
-* User/kernel separation
+The process system is one of the foundations required for building a larger and more capable userspace environment.
 
 ---
 
 # Security
 
-Security infrastructure is part of the long-term VulcanOS architecture.
+Security is part of the long-term VulcanOS architecture. Planned functionality includes users, groups, file permissions, capability-based security, process isolation, and cryptographic utilities.
 
-Planned functionality includes:
-
-* Users
-* Groups
-* File permissions
-* Capability-based security
-* Process isolation
-* Cryptographic utilities
-
-The current system should be considered experimental and is **not production-ready from a security perspective**.
+VulcanOS is currently an experimental operating system and should not be considered production-ready from a security perspective.
 
 ---
 
 # Architecture
 
-VulcanOS uses a modular operating system architecture.
+VulcanOS uses a modular architecture that separates the boot process, kernel, architecture-specific code, drivers, filesystem subsystem, memory management, process system, system calls, security, userspace, package system, SDK, tests, and development tools.
 
 ```text
 VulcanOS
@@ -287,55 +150,29 @@ VulcanOS
 │   │       └── Context switching
 │   │
 │   ├── drivers/
-│   │   ├── Graphics
-│   │   ├── Storage
-│   │   ├── Network
-│   │   ├── Audio
-│   │   ├── Input
-│   │   └── USB
-│   │
 │   ├── fs/
-│   │   ├── VFS
-│   │   ├── RAM filesystem
-│   │   └── Device filesystem
-│   │
 │   ├── memory/
-│   │   └── Memory management
-│   │
 │   ├── process/
-│   │   └── Process and thread system
-│   │
 │   ├── syscall/
-│   │   └── Kernel interface
-│   │
 │   ├── security/
-│   │   └── Security subsystem
-│   │
 │   └── util/
-│       └── Kernel utilities
 │
 ├── libc/
-│   └── Minimal C library
 │
 ├── userspace/
 │   ├── apps/
-│   │   └── System applications
-│   │
 │   ├── services/
-│   │   └── System services
-│   │
 │   └── shell/
-│       └── Command-line environment
 │
 ├── pkg/
-│   └── VPKG package system
+│   └── VPKG
 │
 ├── sdk/
 ├── tests/
 └── tools/
 ```
 
-The architecture will evolve as additional kernel, filesystem, driver, and userspace components are implemented.
+The architecture will continue to evolve as new kernel, filesystem, driver, and userspace components are implemented.
 
 ---
 
@@ -372,8 +209,6 @@ sudo apt install build-essential gcc g++ cmake grub-pc-bin grub-efi-amd64-bin xo
 
 Additional dependencies may be required depending on the current development branch.
 
----
-
 ## Build
 
 ```bash
@@ -383,15 +218,11 @@ chmod +x scripts/build.sh
 
 The build process generates the VulcanOS bootable image.
 
----
-
 ## Run with QEMU
 
 ```bash
 qemu-system-x86_64 -cdrom vulcanos.iso -m 512M
 ```
-
----
 
 ## Debugging
 
@@ -399,111 +230,34 @@ qemu-system-x86_64 -cdrom vulcanos.iso -m 512M
 qemu-system-x86_64 -cdrom vulcanos.iso -serial stdio
 ```
 
-QEMU is the primary development and testing environment for VulcanOS.
+QEMU is currently the primary development and testing environment for VulcanOS.
 
 ---
 
 # Roadmap
 
-## Filesystem
+The immediate focus is improving the existing kernel, filesystem, userspace, and package infrastructure. The next major steps include persistent storage, disk-backed filesystems, additional filesystem drivers, improved process isolation, better scheduling, expanded hardware support, networking, USB support, and a more complete userspace.
 
-* [x] RAM filesystem
-* [x] VulcanOS VFS
-* [x] Device filesystem infrastructure
-* [x] Package system
-* [ ] Persistent storage
-* [ ] Disk-backed filesystem
-* [ ] Filesystem persistence across reboots
-* [ ] Additional filesystem drivers
+Graphics are a longer-term goal. The planned graphical system will include framebuffer abstraction, software rendering, a graphics library, window management, a compositor, a desktop environment, a taskbar and launcher, graphical applications, and mouse-driven interaction.
 
----
-
-## Kernel
-
-* [x] x86_64 kernel foundation
-* [x] Memory-management infrastructure
-* [x] Interrupt infrastructure
-* [x] System-call infrastructure
-* [ ] Improve process isolation
-* [ ] Improve scheduling
-* [ ] Expand hardware support
-* [ ] Improve kernel stability
-
----
-
-## Userspace
-
-* [x] Text-based environment
-* [x] Shell infrastructure
-* [x] Package management
-* [ ] Expand system utilities
-* [ ] Expand userspace APIs
-* [ ] Improve developer tooling
-* [ ] More complete userspace environment
-
----
-
-## Graphics
-
-The graphical environment is **not implemented yet**.
-
-Planned work includes:
-
-* [ ] Framebuffer abstraction
-* [ ] Software rendering
-* [ ] Graphics library
-* [ ] Window management
-* [ ] Compositor
-* [ ] Desktop environment
-* [ ] Taskbar/launcher
-* [ ] Graphical applications
-* [ ] Mouse-driven graphical interaction
-
-The graphical desktop will be built on top of the existing kernel, driver, filesystem, and userspace foundations rather than being treated as the current core of the project.
-
----
-
-## Long-Term Goals
-
-* Persistent storage
-* More complete hardware support
-* Networking
-* USB support
-* Improved security
-* Better developer tools
-* Expanded package ecosystem
-* Graphical desktop environment
-* Graphical applications
-* A usable standalone operating system
+The long-term goal is to turn VulcanOS into a complete standalone operating system with persistent storage, broader hardware support, networking, a mature package ecosystem, a graphical desktop environment, and a growing collection of applications.
 
 ---
 
 # Project Philosophy
 
-VulcanOS is primarily an **educational and experimental operating system project**.
+VulcanOS is primarily an educational and experimental operating system project focused on understanding how operating systems work by implementing major components from scratch.
 
-The project focuses on understanding how operating systems work by implementing major components from scratch rather than relying on existing operating-system infrastructure.
+The project covers kernel development, low-level systems programming, hardware interaction, memory management, filesystem design, process management, package management, userspace development, and operating system architecture.
 
-Areas of focus include:
-
-* Kernel development
-* Low-level systems programming
-* Hardware interaction
-* Memory management
-* Filesystem design
-* Process management
-* Package management
-* Userspace development
-* Operating system architecture
-
-The goal is not to immediately reproduce a modern desktop operating system. The goal is to build the foundations step by step and understand each layer of the system along the way.
+The goal is not to immediately recreate a modern desktop operating system. Instead, VulcanOS is being built layer by layer, with each part of the system providing a foundation for the next.
 
 ---
 
 # Credits
 
-VulcanOS originated from the **OneOS** project and was developed as a collaborative operating system project with **Rafa**.
+VulcanOS originated from the OneOS project and was developed as a collaborative operating system project with Rafa.
 
-VulcanOS is inspired by hobby operating-system development, Unix philosophy, low-level systems programming, and experimental operating-system design.
+The project is inspired by hobby operating-system development, Unix philosophy, low-level systems programming, and experimental operating-system design.
 
-The project is built from scratch as a learning, research, and development project.
+VulcanOS is built from scratch as a learning, research, and development project.
