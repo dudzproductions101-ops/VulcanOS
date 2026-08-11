@@ -261,3 +261,4 @@ VulcanOS originated from the OneOS project and was developed as a collaborative 
 The project is inspired by hobby operating-system development, Unix philosophy, low-level systems programming, and experimental operating-system design.
 
 VulcanOS is built from scratch as a learning, research, and development project.
+
