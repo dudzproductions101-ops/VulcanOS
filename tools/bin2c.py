@@ -1,26 +1,3 @@
-#!/usr/bin/env python3
-"""
-bin2c.py - Converts a binary file into a compilable C source file
-
-Usage:
-    python3 bin2c.py <input.bin> <output.c> <variable_name>
-
-Generates <output.c> containing:
-    const u8 <variable_name>[] = { 0x.., 0x.., ... };
-    const usize <variable_name>_size = <N>;
-
-Used to turn a built .vpk archive (see vpkbuild.py) into something
-that compiles directly into the VulcanOS kernel image -- see
-kernel/include/pkg/embedded_packages.h for why this is currently
-package installation's only transport, and exactly how the generated
-file gets wired into vpkg's registry (two lines in
-kernel/pkg/embedded_packages.c: one extern declaration, one registry
-entry).
-
-HOST-SIDE tool, same as vpkbuild.py -- runs when building VulcanOS,
-not on VulcanOS itself.
-"""
-
 import sys
 from pathlib import Path
 
