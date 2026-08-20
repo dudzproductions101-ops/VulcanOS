@@ -1,0 +1,70 @@
+name: OS Dev Auto Commit
+
+on:
+  schedule:
+    - cron: "0 0 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  auto-commit:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Generate OS-dev update
+        shell: bash
+        run: |
+          mkdir -p .auto
+
+          messages=(
+            "kernel: tweak interrupt handling"
+            "mm: improve page allocator"
+            "sched: clean up task switching"
+            "arch: update GDT setup"
+            "tty: fix cursor positioning"
+            "drivers: clean up keyboard input"
+            "boot: adjust multiboot initialization"
+            "mm: simplify heap allocation"
+            "cpu: add CPUID feature check"
+            "fs: refactor inode handling"
+            "kernel: improve panic output"
+            "x86: clean up IDT initialization"
+            "sched: adjust context switch"
+            "tty: improve terminal output"
+            "drivers: fix PS/2 keyboard handling"
+            "boot: clean up early initialization"
+            "mm: fix alignment in allocator"
+            "kernel: refactor initialization"
+            "arch: tidy interrupt stubs"
+            "debug: improve kernel logging"
+          )
+
+          message="${messages[$RANDOM % ${#messages[@]}]}"
+
+          echo "Automated OS-dev update: $(date -u '+%Y-%m-%d %H:%M:%S UTC')" \
+            >> .auto/dev-log.txt
+
+          echo "$message" > .auto/last-commit.txt
+
+          echo "COMMIT_MESSAGE=$message" >> "$GITHUB_ENV"
+
+      - name: Commit and push
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          git add .auto/
+
+          if git diff --cached --quiet; then
+            echo "Nothing to commit"
+            exit 0
+          fi
+
+          git commit -m "$COMMIT_MESSAGE"
+          git push
