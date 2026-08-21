@@ -1,1 +1,1 @@
-mm: improve page allocator
+kernel: refactor initialization
