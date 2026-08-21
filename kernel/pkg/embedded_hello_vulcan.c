@@ -56,3 +56,4 @@ const u8 g_pkg_hello_vulcan[] = {
 };
 
 const usize g_pkg_hello_vulcan_size = 818;
+
