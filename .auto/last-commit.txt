@@ -1,1 +1,1 @@
-kernel: refactor initialization
+drivers: fix PS/2 keyboard handling
