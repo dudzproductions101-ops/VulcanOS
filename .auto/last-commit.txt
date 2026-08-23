@@ -1,1 +1,1 @@
-drivers: fix PS/2 keyboard handling
+arch: update GDT setup
