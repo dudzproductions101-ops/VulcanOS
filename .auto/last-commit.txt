@@ -1,1 +1,1 @@
-arch: update GDT setup
+mm: simplify heap allocation
