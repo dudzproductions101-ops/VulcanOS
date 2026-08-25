@@ -1,1 +1,1 @@
-mm: simplify heap allocation
+boot: clean up early initialization
