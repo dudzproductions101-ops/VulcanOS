@@ -1,1 +1,1 @@
-boot: clean up early initialization
+sched: adjust context switch
