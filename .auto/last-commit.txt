@@ -1,1 +1,1 @@
-sched: adjust context switch
+x86: clean up IDT initialization
