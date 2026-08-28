@@ -6,8 +6,12 @@ void init_thread_entry(void)
 {
     printf("init: VulcanOS userland starting.\n");
 
-    char *argv[] = { "vulsh" };
-    vulsh_main(1, argv);
+    char *argv[] = { "vulsh", NULL };
+    int status = vulsh_main(1, argv);
 
-    printf("init: shell exited unexpectedly.\n");
+    printf("init: shell exited with status %d.\n", status);
+
+    for (;;) {
+        /* Keep init alive. */
+    }
 }
