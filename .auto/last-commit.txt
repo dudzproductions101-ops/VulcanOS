@@ -1,1 +1,1 @@
-drivers: clean up keyboard input
+drivers: fix PS/2 keyboard handling
