@@ -1,1 +1,1 @@
-kernel: tweak interrupt handling
+arch: tidy interrupt stubs
