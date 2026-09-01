@@ -1,1 +1,1 @@
-arch: tidy interrupt stubs
+mm: fix alignment in allocator
