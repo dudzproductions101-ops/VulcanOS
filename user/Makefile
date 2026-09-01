@@ -27,7 +27,7 @@ CFLAGS := -m64 -ffreestanding -fno-pic -fno-pie -fno-stack-protector \
           -I$(INCLUDE_DIR) -I$(SHELL_INCLUDE_DIR) -I$(INIT_INCLUDE_DIR) \
           -I$(LIBC_INCLUDE_DIR) -I$(KERNEL_INCLUDE_DIR) -O2 -g
 
-C_SOURCES := $(shell find bin init shell -name '*.c' 2>/dev/null)
+C_SOURCES := $(shell find bin init shell graphics -name '*.c' 2>/dev/null)
 OBJECTS := $(patsubst %.c,$(BUILD_DIR)/%.o,$(C_SOURCES))
 
 USER_ARCHIVE := $(BUILD_DIR)/libvulcan_user.a
