@@ -1,1 +1,1 @@
-sched: clean up task switching
+debug: improve kernel logging
