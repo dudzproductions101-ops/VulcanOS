@@ -1,1 +1,1 @@
-debug: improve kernel logging
+boot: adjust multiboot initialization
