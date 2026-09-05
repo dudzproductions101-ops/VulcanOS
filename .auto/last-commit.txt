@@ -1,1 +1,1 @@
-boot: adjust multiboot initialization
+tty: fix cursor positioning
