@@ -1,1 +1,1 @@
-tty: fix cursor positioning
+x86: clean up IDT initialization
