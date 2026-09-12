@@ -1,1 +1,1 @@
-boot: adjust multiboot initialization
+sched: adjust context switch
