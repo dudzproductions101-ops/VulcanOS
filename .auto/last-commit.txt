@@ -1,1 +1,1 @@
-mm: improve page allocator
+x86: clean up IDT initialization
