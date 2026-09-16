@@ -1,1 +1,1 @@
-mm: improve page allocator
+boot: clean up early initialization
