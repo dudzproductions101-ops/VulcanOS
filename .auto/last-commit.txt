@@ -1,1 +1,1 @@
-boot: clean up early initialization
+mm: fix alignment in allocator
