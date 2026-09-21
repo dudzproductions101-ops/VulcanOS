@@ -1,1 +1,1 @@
-boot: adjust multiboot initialization
+mm: simplify heap allocation
