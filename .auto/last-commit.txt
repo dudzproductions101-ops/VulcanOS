@@ -1,1 +1,1 @@
-boot: adjust multiboot initialization
+kernel: improve panic output
