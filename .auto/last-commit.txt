@@ -1,1 +1,1 @@
-kernel: improve panic output
+mm: fix alignment in allocator
