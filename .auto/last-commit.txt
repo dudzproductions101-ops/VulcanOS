@@ -1,1 +1,1 @@
-mm: fix alignment in allocator
+tty: improve terminal output
