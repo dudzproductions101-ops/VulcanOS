@@ -1,1 +1,1 @@
-tty: improve terminal output
+kernel: tweak interrupt handling
