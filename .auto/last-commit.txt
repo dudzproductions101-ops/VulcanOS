@@ -1,1 +1,1 @@
-boot: clean up early initialization
+fs: refactor inode handling
