@@ -1,1 +1,1 @@
-fs: refactor inode handling
+arch: tidy interrupt stubs
