@@ -1,1 +1,1 @@
-kernel: refactor initialization
+kernel: tweak interrupt handling
