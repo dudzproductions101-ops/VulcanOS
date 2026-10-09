@@ -1,1 +1,1 @@
-kernel: tweak interrupt handling
+tty: fix cursor positioning
