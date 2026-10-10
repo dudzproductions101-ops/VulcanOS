@@ -1,1 +1,1 @@
-tty: fix cursor positioning
+tty: improve terminal output
