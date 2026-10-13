@@ -1,1 +1,1 @@
-kernel: improve panic output
+tty: fix cursor positioning
