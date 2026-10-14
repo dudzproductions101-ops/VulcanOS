@@ -1,1 +1,1 @@
-tty: fix cursor positioning
+cpu: add CPUID feature check
