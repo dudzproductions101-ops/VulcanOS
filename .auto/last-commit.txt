@@ -1,1 +1,1 @@
-cpu: add CPUID feature check
+tty: improve terminal output
