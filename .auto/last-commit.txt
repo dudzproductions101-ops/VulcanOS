@@ -1,1 +1,1 @@
-mm: simplify heap allocation
+kernel: refactor initialization
