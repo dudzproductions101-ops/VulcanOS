@@ -1,1 +1,1 @@
-kernel: refactor initialization
+sched: clean up task switching
