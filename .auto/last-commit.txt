@@ -1,1 +1,1 @@
-sched: clean up task switching
+arch: tidy interrupt stubs
